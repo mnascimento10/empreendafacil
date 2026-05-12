@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empreenda Fácil</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== NAVEGAÇÃO ===== -->
+<nav>
+    <span class="nav-logo">Empreenda<span>Fácil</span></span>
+    <a href="#perfis" class="nav-cta">Ver materiais</a>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+    <div class="hero-text">
+        <div class="hero-badge">🇧🇷 Feito para quem trabalha por conta própria</div>
+        <h1>Pare de perder clientes.<br>Comece a <em>crescer de verdade.</em></h1>
+        <p class="hero-desc">Ferramentas simples, gratuitas e práticas para MEIs, autônomos e pequenos empreendedores organizarem seu negócio e atraírem mais clientes.</p>
+        <div class="hero-actions">
+            <button class="btn-primary" onclick="scrollParaPerfis()">Escolher meu perfil</button>
+            <button class="btn-ghost" onclick="document.querySelector('.problemas').scrollIntoView({behavior:'smooth'})">Ver como funciona</button>
+        </div>
+        <div class="hero-stats">
+            <div>
+                <span class="hero-stat-num">5</span>
+                <span class="hero-stat-label">Perfis de negócio</span>
+            </div>
+            <div>
+                <span class="hero-stat-num">5</span>
+                <span class="hero-stat-label">Tutoriais em PDF</span>
+            </div>
+            <div>
+                <span class="hero-stat-num">3</span>
+                <span class="hero-stat-label">Planilhas gratuitas</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-visual">
+        <div class="hero-card-stack">
+            <div class="hcard hcard-1">
+                <div class="hcard-icon">📊</div>
+                <div class="hcard-title">Controle Financeiro</div>
+                <div class="hcard-desc">Planilha de fluxo de caixa e precificação</div>
+            </div>
+            <div class="hcard hcard-2">
+                <div class="hcard-icon">📱</div>
+                <div class="hcard-title">Presença Digital</div>
+                <div class="hcard-desc">Instagram, Google Maps e WhatsApp Business</div>
+            </div>
+            <div class="hcard hcard-3">
+                <div class="hcard-icon">🚀</div>
+                <div class="hcard-title">Comece hoje</div>
+                <div class="hcard-desc">Tutoriais passo a passo</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== PROBLEMAS ===== -->
+<section class="problemas">
+    <p class="section-label">Situações reais</p>
+    <h2 class="section-title">Você já passou por algum desses problemas?</h2>
+    <p class="section-sub">São situações muito comuns para quem trabalha por conta própria. E todas têm solução simples.</p>
+
+    <div class="problema-grid">
+        <div class="problema-card">
+            <span class="prob-icon">📢</span>
+            <div class="prob-titulo">Divulgação e Visibilidade</div>
+            <div class="prob-frase">"Ninguém conhece meu trabalho."</div>
+            <div class="prob-desc">Depender só de indicação limita seu crescimento. Quem não aparece online simplesmente não é encontrado.</div>
+        </div>
+        <div class="problema-card">
+            <span class="prob-icon">💰</span>
+            <div class="prob-titulo">Organização Financeira</div>
+            <div class="prob-frase">"Não sei se estou lucrando."</div>
+            <div class="prob-desc">Sem controle financeiro, você trabalha muito sem saber se realmente está tendo lucro.</div>
+        </div>
+        <div class="problema-card">
+            <span class="prob-icon">📦</span>
+            <div class="prob-titulo">Gestão de Clientes</div>
+            <div class="prob-frase">"Esqueci de responder um cliente."</div>
+            <div class="prob-desc">Pedidos se perdem, mensagens acumulam e oportunidades são desperdiçadas.</div>
+        </div>
+        <div class="problema-card">
+            <span class="prob-icon">⏳</span>
+            <div class="prob-titulo">Falta de Tempo</div>
+            <div class="prob-frase">"Faço tudo sozinho e não dou conta."</div>
+            <div class="prob-desc">Sem organização e ferramentas certas, o trabalho vira um ciclo cansativo e improdutivo.</div>
+        </div>
+        <div class="problema-card">
+            <span class="prob-icon">📱</span>
+            <div class="prob-titulo">Presença Digital</div>
+            <div class="prob-frase">"Meu Instagram é bagunçado."</div>
+            <div class="prob-desc">Uma apresentação ruim afasta clientes e transmite falta de profissionalismo.</div>
+        </div>
+        <div class="problema-card">
+            <span class="prob-icon">⭐</span>
+            <div class="prob-titulo">Credibilidade</div>
+            <div class="prob-frase">"As pessoas não confiam no meu serviço."</div>
+            <div class="prob-desc">Sem avaliações e provas sociais, novos clientes ficam inseguros em contratar.</div>
+        </div>
+        <div class="problema-card">
+            <span class="prob-icon">📈</span>
+            <div class="prob-titulo">Novos Clientes</div>
+            <div class="prob-frase">"Só vendo para conhecidos."</div>
+            <div class="prob-desc">Sem estratégia, você não cresce e fica limitado ao seu círculo atual.</div>
+        </div>
+        <div class="problema-card">
+            <span class="prob-icon">💻</span>
+            <div class="prob-titulo">Tecnologia Digital</div>
+            <div class="prob-frase">"Não entendo nada de internet."</div>
+            <div class="prob-desc">A tecnologia parece complicada, mas existem formas simples de usar a seu favor.</div>
+        </div>
+    </div>
+
+    <div class="problemas-cta">
+        <p>A boa notícia: <em>tudo isso tem solução simples e gratuita.</em></p>
+        <button class="btn-primary" onclick="scrollParaPerfis()">Ver o que fazer no meu caso →</button>
+    </div>
+</section>
+
+<!-- ===== EBOOK ===== -->
+<section class="ebook">
+    <div class="ebook-inner">
+
+        <!-- Lado esquerdo: texto -->
+        <div class="ebook-texto">
+            <p class="section-label">Guia completo e gratuito</p>
+            <h2 class="ebook-titulo">Empreenda Fácil:<br>O Guia Digital do<br>Pequeno Negócio</h2>
+            <p class="ebook-desc">
+                Um guia completo e gratuito para microempreendedores e autônomos aprenderem a usar a tecnologia a seu favor — do zero, sem custo e sem complicação.
+            </p>
+
+            <ul class="ebook-topicos">
+                <li><span class="ebook-check">✓</span> Como aparecer no Google e atrair clientes locais</li>
+                <li><span class="ebook-check">✓</span> Atendimento profissional com WhatsApp Business</li>
+                <li><span class="ebook-check">✓</span> Como organizar agenda, pedidos e financeiro</li>
+                <li><span class="ebook-check">✓</span> Dicas específicas para MEI, Autônomo, Beleza, Motorista e Produtor Manual</li>
+                <li><span class="ebook-check">✓</span> Mais de 30 páginas com linguagem simples e exemplos práticos</li>
+            </ul>
+
+            <div class="ebook-acoes">
+                <a href="pdf/EmpreendaFacil_Ebook.pdf" download class="btn-primary">
+                    ⬇ Baixar o Guia Gratuitamente
+                </a>
+                <span class="ebook-badge-gratis">100% gratuito · PDF · Sem cadastro</span>
+            </div>
+        </div>
+
+        <!-- Lado direito: mockup da capa -->
+        <div class="ebook-mockup-wrap">
+            <div class="ebook-mockup">
+                <div class="ebook-mockup-topo"></div>
+                <div class="ebook-mockup-body">
+                    <div class="ebook-mockup-titulo">Empreenda<br>Fácil</div>
+                    <div class="ebook-mockup-linha"></div>
+                    <div class="ebook-mockup-sub">O Guia Digital do<br>Pequeno Negócio</div>
+                    <div class="ebook-mockup-icones">
+                        <span>📱</span><span>💰</span><span>📍</span><span>🚀</span>
+                    </div>
+                    <div class="ebook-mockup-rodape">Araraquara · SP · Brasil</div>
+                </div>
+                <div class="ebook-mockup-sombra"></div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ===== PERFIS ===== -->
+<section id="perfis">
+    <p class="section-label">Conteúdo personalizado</p>
+    <h2 class="section-title" style="color: var(--white)">Escolha seu perfil</h2>
+    <p class="section-sub" style="color: rgba(255,255,255,0.45); margin-bottom: 40px;">Selecione abaixo e receba um passo a passo feito para o seu tipo de negócio.</p>
+
+    <div class="perfil-grid">
+        <button class="perfil-btn" onclick="selecionarPerfil('mei', this)">
+            <span class="perfil-btn-icon">🏢</span>
+            <div class="perfil-btn-label">MEI</div>
+            <div class="perfil-btn-sub">Microempreendedor</div>
+        </button>
+        <button class="perfil-btn" onclick="selecionarPerfil('autonomo', this)">
+            <span class="perfil-btn-icon">💼</span>
+            <div class="perfil-btn-label">Autônomo</div>
+            <div class="perfil-btn-sub">Profissional independente</div>
+        </button>
+        <button class="perfil-btn" onclick="selecionarPerfil('motorista', this)">
+            <span class="perfil-btn-icon">🚗</span>
+            <div class="perfil-btn-label">Motorista de App</div>
+            <div class="perfil-btn-sub">Uber, 99 e outros</div>
+        </button>
+        <button class="perfil-btn" onclick="selecionarPerfil('beleza', this)">
+            <span class="perfil-btn-icon">💇</span>
+            <div class="perfil-btn-label">Beleza</div>
+            <div class="perfil-btn-sub">Cabelo, estética, unhas</div>
+        </button>
+        <button class="perfil-btn" onclick="selecionarPerfil('produtor', this)">
+            <span class="perfil-btn-icon">🎨</span>
+            <div class="perfil-btn-label">Produtor Manual</div>
+            <div class="perfil-btn-sub">Artesanato e confecção</div>
+        </button>
+    </div>
+</section>
+
+<!-- ===== CONTEÚDO DINÂMICO ===== -->
+<section id="conteudo">
+    <div class="conteudo-empty">
+        <div class="conteudo-empty-icon">☝️</div>
+        <p>Selecione um perfil acima para ver os materiais</p>
+    </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+    <p class="footer-logo">Empreenda<strong>Fácil</strong></p>
+    <p class="footer-info">Projeto de extensão acadêmica — Análise e Desenvolvimento de Sistemas</p>
+    <p class="footer-sub">Feito para apoiar microempreendedores e trabalhadores autônomos</p>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
