@@ -1442,3 +1442,44 @@ footer strong { color: var(--amber); }
     .relatos-grid { grid-template-columns: 1fr; }
     .nav-sobre { display: none; }
 }
+
+/* ===== ESTRELAS ===== */
+.modal-estrelas-wrap {
+    margin-bottom: 14px;
+}
+.modal-estrelas-label {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-700);
+    margin-bottom: 8px;
+}
+.modal-estrelas {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+.estrela {
+    font-size: 28px;
+    color: var(--gray-200);
+    cursor: pointer;
+    transition: color 0.15s, transform 0.15s;
+    line-height: 1;
+}
+.estrela:hover,
+.estrela.ativa {
+    color: var(--amber);
+    transform: scale(1.15);
+}
+.modal-estrelas-texto {
+    font-size: 12px;
+    color: var(--gray-500);
+    font-style: italic;
+}
+.relato-estrelas {
+    font-size: 16px;
+    color: var(--amber);
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
