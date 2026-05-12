@@ -8,14 +8,94 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
 <!-- ===== NAVEGAÇÃO ===== -->
 <nav>
     <span class="nav-logo">Empreenda<span>Fácil</span></span>
-    <a href="#perfis" class="nav-cta">Ver materiais</a>
+    <div class="nav-direita">
+        <button class="nav-sobre" onclick="abrirSobre()">Sobre o Projeto</button>
+        <div id="nav-usuario" class="nav-usuario-area">
+            <button class="nav-login-btn" onclick="abrirLogin()">Entrar</button>
+        </div>
+    </div>
 </nav>
+
+<!-- ===== MODAL SOBRE O PROJETO ===== -->
+<div id="modal-sobre" class="modal-overlay" onclick="fecharSobre(event)">
+    <div class="modal-box">
+        <button class="modal-fechar" onclick="fecharSobreBtn()">✕</button>
+        <div class="modal-sobre-header">
+            <span class="modal-sobre-emoji">🌱</span>
+            <h3>Sobre o Empreenda Fácil</h3>
+        </div>
+        <p class="modal-sobre-texto">
+            Este projeto nasceu de uma constatação simples: muitos profissionais talentosos em Araraquara e região perdem clientes todos os dias — não por falta de qualidade, mas por falta de visibilidade e organização digital.
+        </p>
+        <p class="modal-sobre-texto">
+            O <strong>Empreenda Fácil</strong> foi criado para mudar isso. É uma plataforma gratuita com tutoriais, planilhas e um guia completo para que microempreendedores e autônomos possam dar seus primeiros passos no mundo digital com confiança e sem complicação.
+        </p>
+        <div class="modal-sobre-divider"></div>
+        <p class="modal-sobre-academico">
+            📚 Este é um <strong>projeto de extensão acadêmica</strong> do curso de Análise e Desenvolvimento de Sistemas, desenvolvido para gerar impacto real na comunidade de Araraquara, SP.
+        </p>
+        <div class="modal-sobre-autor">
+            <span>👨‍💻</span>
+            <div>
+                <strong>Miguel Augusto de Pauli Nascimento</strong>
+                <span>Análise e Desenvolvimento de Sistemas · Araraquara, SP</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL LOGIN ===== -->
+<div id="modal-login" class="modal-overlay" onclick="fecharLogin(event)">
+    <div class="modal-box modal-login-box">
+        <button class="modal-fechar" onclick="fecharLoginBtn()">✕</button>
+        <h3 class="modal-login-titulo">Entrar no Empreenda Fácil</h3>
+        <p class="modal-login-sub">Entre para deixar seu relato e acompanhar os materiais.</p>
+        <button class="btn-google-login" onclick="loginGoogle()">
+            <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+                <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
+                <path d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z" fill="#FBBC05"/>
+                <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z" fill="#EA4335"/>
+            </svg>
+            Continuar com Google
+        </button>
+        <div class="modal-login-divider"><span>ou</span></div>
+        <input type="email" id="login-email" class="modal-input" placeholder="Seu e-mail">
+        <input type="password" id="login-senha" class="modal-input" placeholder="Senha">
+        <button class="btn-primary modal-btn-entrar" onclick="loginEmail()">Entrar com E-mail</button>
+        <p class="modal-login-cadastro">Não tem conta? <a href="#" onclick="cadastrarEmail()">Cadastre-se</a></p>
+        <p id="login-erro" class="modal-login-erro"></p>
+    </div>
+</div>
+
+<!-- ===== MODAL RELATO ===== -->
+<div id="modal-relato" class="modal-overlay" onclick="fecharRelato(event)">
+    <div class="modal-box">
+        <button class="modal-fechar" onclick="fecharRelatoBtn()">✕</button>
+        <h3 class="modal-login-titulo">Compartilhe sua experiência</h3>
+        <p class="modal-login-sub">Sua história pode inspirar outros empreendedores!</p>
+        <select id="relato-perfil" class="modal-input modal-select">
+            <option value="">Selecione seu perfil...</option>
+            <option value="MEI">MEI</option>
+            <option value="Autônomo">Autônomo</option>
+            <option value="Motorista de App">Motorista de App</option>
+            <option value="Profissional de Beleza">Profissional de Beleza</option>
+            <option value="Produtor Manual">Produtor Manual</option>
+        </select>
+        <textarea id="relato-texto" class="modal-input modal-textarea"
+            placeholder="Conte como o Empreenda Fácil te ajudou..."></textarea>
+        <button class="btn-primary modal-btn-entrar" onclick="enviarRelato()">Enviar Relato</button>
+        <p id="relato-msg" class="modal-login-erro"></p>
+    </div>
+</div>
 
 <!-- ===== HERO ===== -->
 <section class="hero">
@@ -29,20 +109,19 @@
         </div>
         <div class="hero-stats">
             <div>
-                <span class="hero-stat-num">5</span>
+                <span class="hero-stat-num" data-target="5">0</span>
                 <span class="hero-stat-label">Perfis de negócio</span>
             </div>
             <div>
-                <span class="hero-stat-num">5</span>
+                <span class="hero-stat-num" data-target="5">0</span>
                 <span class="hero-stat-label">Tutoriais em PDF</span>
             </div>
             <div>
-                <span class="hero-stat-num">3</span>
+                <span class="hero-stat-num" data-target="3">0</span>
                 <span class="hero-stat-label">Planilhas gratuitas</span>
             </div>
         </div>
     </div>
-
     <div class="hero-visual">
         <div class="hero-card-stack">
             <div class="hcard hcard-1">
@@ -69,58 +148,16 @@
     <p class="section-label">Situações reais</p>
     <h2 class="section-title">Você já passou por algum desses problemas?</h2>
     <p class="section-sub">São situações muito comuns para quem trabalha por conta própria. E todas têm solução simples.</p>
-
     <div class="problema-grid">
-        <div class="problema-card">
-            <span class="prob-icon">📢</span>
-            <div class="prob-titulo">Divulgação e Visibilidade</div>
-            <div class="prob-frase">"Ninguém conhece meu trabalho."</div>
-            <div class="prob-desc">Depender só de indicação limita seu crescimento. Quem não aparece online simplesmente não é encontrado.</div>
-        </div>
-        <div class="problema-card">
-            <span class="prob-icon">💰</span>
-            <div class="prob-titulo">Organização Financeira</div>
-            <div class="prob-frase">"Não sei se estou lucrando."</div>
-            <div class="prob-desc">Sem controle financeiro, você trabalha muito sem saber se realmente está tendo lucro.</div>
-        </div>
-        <div class="problema-card">
-            <span class="prob-icon">📦</span>
-            <div class="prob-titulo">Gestão de Clientes</div>
-            <div class="prob-frase">"Esqueci de responder um cliente."</div>
-            <div class="prob-desc">Pedidos se perdem, mensagens acumulam e oportunidades são desperdiçadas.</div>
-        </div>
-        <div class="problema-card">
-            <span class="prob-icon">⏳</span>
-            <div class="prob-titulo">Falta de Tempo</div>
-            <div class="prob-frase">"Faço tudo sozinho e não dou conta."</div>
-            <div class="prob-desc">Sem organização e ferramentas certas, o trabalho vira um ciclo cansativo e improdutivo.</div>
-        </div>
-        <div class="problema-card">
-            <span class="prob-icon">📱</span>
-            <div class="prob-titulo">Presença Digital</div>
-            <div class="prob-frase">"Meu Instagram é bagunçado."</div>
-            <div class="prob-desc">Uma apresentação ruim afasta clientes e transmite falta de profissionalismo.</div>
-        </div>
-        <div class="problema-card">
-            <span class="prob-icon">⭐</span>
-            <div class="prob-titulo">Credibilidade</div>
-            <div class="prob-frase">"As pessoas não confiam no meu serviço."</div>
-            <div class="prob-desc">Sem avaliações e provas sociais, novos clientes ficam inseguros em contratar.</div>
-        </div>
-        <div class="problema-card">
-            <span class="prob-icon">📈</span>
-            <div class="prob-titulo">Novos Clientes</div>
-            <div class="prob-frase">"Só vendo para conhecidos."</div>
-            <div class="prob-desc">Sem estratégia, você não cresce e fica limitado ao seu círculo atual.</div>
-        </div>
-        <div class="problema-card">
-            <span class="prob-icon">💻</span>
-            <div class="prob-titulo">Tecnologia Digital</div>
-            <div class="prob-frase">"Não entendo nada de internet."</div>
-            <div class="prob-desc">A tecnologia parece complicada, mas existem formas simples de usar a seu favor.</div>
-        </div>
+        <div class="problema-card"><span class="prob-icon">📢</span><div class="prob-titulo">Divulgação e Visibilidade</div><div class="prob-frase">"Ninguém conhece meu trabalho."</div><div class="prob-desc">Depender só de indicação limita seu crescimento. Quem não aparece online simplesmente não é encontrado.</div></div>
+        <div class="problema-card"><span class="prob-icon">💰</span><div class="prob-titulo">Organização Financeira</div><div class="prob-frase">"Não sei se estou lucrando."</div><div class="prob-desc">Sem controle financeiro, você trabalha muito sem saber se realmente está tendo lucro.</div></div>
+        <div class="problema-card"><span class="prob-icon">📦</span><div class="prob-titulo">Gestão de Clientes</div><div class="prob-frase">"Esqueci de responder um cliente."</div><div class="prob-desc">Pedidos se perdem, mensagens acumulam e oportunidades são desperdiçadas.</div></div>
+        <div class="problema-card"><span class="prob-icon">⏳</span><div class="prob-titulo">Falta de Tempo</div><div class="prob-frase">"Faço tudo sozinho e não dou conta."</div><div class="prob-desc">Sem organização e ferramentas certas, o trabalho vira um ciclo cansativo e improdutivo.</div></div>
+        <div class="problema-card"><span class="prob-icon">📱</span><div class="prob-titulo">Presença Digital</div><div class="prob-frase">"Meu Instagram é bagunçado."</div><div class="prob-desc">Uma apresentação ruim afasta clientes e transmite falta de profissionalismo.</div></div>
+        <div class="problema-card"><span class="prob-icon">⭐</span><div class="prob-titulo">Credibilidade</div><div class="prob-frase">"As pessoas não confiam no meu serviço."</div><div class="prob-desc">Sem avaliações e provas sociais, novos clientes ficam inseguros em contratar.</div></div>
+        <div class="problema-card"><span class="prob-icon">📈</span><div class="prob-titulo">Novos Clientes</div><div class="prob-frase">"Só vendo para conhecidos."</div><div class="prob-desc">Sem estratégia, você não cresce e fica limitado ao seu círculo atual.</div></div>
+        <div class="problema-card"><span class="prob-icon">💻</span><div class="prob-titulo">Tecnologia Digital</div><div class="prob-frase">"Não entendo nada de internet."</div><div class="prob-desc">A tecnologia parece complicada, mas existem formas simples de usar a seu favor.</div></div>
     </div>
-
     <div class="problemas-cta">
         <p>A boa notícia: <em>tudo isso tem solução simples e gratuita.</em></p>
         <button class="btn-primary" onclick="scrollParaPerfis()">Ver o que fazer no meu caso →</button>
@@ -130,15 +167,10 @@
 <!-- ===== EBOOK ===== -->
 <section class="ebook">
     <div class="ebook-inner">
-
-        <!-- Lado esquerdo: texto -->
         <div class="ebook-texto">
             <p class="section-label">Guia completo e gratuito</p>
             <h2 class="ebook-titulo">Empreenda Fácil:<br>O Guia Digital do<br>Pequeno Negócio</h2>
-            <p class="ebook-desc">
-                Um guia completo e gratuito para microempreendedores e autônomos aprenderem a usar a tecnologia a seu favor — do zero, sem custo e sem complicação.
-            </p>
-
+            <p class="ebook-desc">Um guia completo e gratuito para microempreendedores e autônomos aprenderem a usar a tecnologia a seu favor — do zero, sem custo e sem complicação.</p>
             <ul class="ebook-topicos">
                 <li><span class="ebook-check">✓</span> Como aparecer no Google e atrair clientes locais</li>
                 <li><span class="ebook-check">✓</span> Atendimento profissional com WhatsApp Business</li>
@@ -146,16 +178,15 @@
                 <li><span class="ebook-check">✓</span> Dicas específicas para MEI, Autônomo, Beleza, Motorista e Produtor Manual</li>
                 <li><span class="ebook-check">✓</span> Mais de 30 páginas com linguagem simples e exemplos práticos</li>
             </ul>
-
             <div class="ebook-acoes">
-                <a href="pdf/EmpreendaFacil_Ebook.pdf" download class="btn-primary">
+                <a href="pdf/EmpreendaFacil_Ebook.pdf" download
+                   class="btn-primary"
+                   onclick="registrarClique('ebook')">
                     ⬇ Baixar o Guia Gratuitamente
                 </a>
                 <span class="ebook-badge-gratis">100% gratuito · PDF · Sem cadastro</span>
             </div>
         </div>
-
-        <!-- Lado direito: mockup da capa -->
         <div class="ebook-mockup-wrap">
             <div class="ebook-mockup">
                 <div class="ebook-mockup-topo"></div>
@@ -171,7 +202,6 @@
                 <div class="ebook-mockup-sombra"></div>
             </div>
         </div>
-
     </div>
 </section>
 
@@ -180,33 +210,44 @@
     <p class="section-label">Conteúdo personalizado</p>
     <h2 class="section-title" style="color: var(--white)">Escolha seu perfil</h2>
     <p class="section-sub" style="color: rgba(255,255,255,0.45); margin-bottom: 40px;">Selecione abaixo e receba um passo a passo feito para o seu tipo de negócio.</p>
-
     <div class="perfil-grid">
         <button class="perfil-btn" onclick="selecionarPerfil('mei', this)">
             <span class="perfil-btn-icon">🏢</span>
             <div class="perfil-btn-label">MEI</div>
             <div class="perfil-btn-sub">Microempreendedor</div>
+            <div class="perfil-visto" id="visto-mei"></div>
         </button>
         <button class="perfil-btn" onclick="selecionarPerfil('autonomo', this)">
             <span class="perfil-btn-icon">💼</span>
             <div class="perfil-btn-label">Autônomo</div>
             <div class="perfil-btn-sub">Profissional independente</div>
+            <div class="perfil-visto" id="visto-autonomo"></div>
         </button>
         <button class="perfil-btn" onclick="selecionarPerfil('motorista', this)">
             <span class="perfil-btn-icon">🚗</span>
             <div class="perfil-btn-label">Motorista de App</div>
             <div class="perfil-btn-sub">Uber, 99 e outros</div>
+            <div class="perfil-visto" id="visto-motorista"></div>
         </button>
         <button class="perfil-btn" onclick="selecionarPerfil('beleza', this)">
             <span class="perfil-btn-icon">💇</span>
             <div class="perfil-btn-label">Beleza</div>
             <div class="perfil-btn-sub">Cabelo, estética, unhas</div>
+            <div class="perfil-visto" id="visto-beleza"></div>
         </button>
         <button class="perfil-btn" onclick="selecionarPerfil('produtor', this)">
             <span class="perfil-btn-icon">🎨</span>
             <div class="perfil-btn-label">Produtor Manual</div>
             <div class="perfil-btn-sub">Artesanato e confecção</div>
+            <div class="perfil-visto" id="visto-produtor"></div>
         </button>
+    </div>
+    <!-- Contador de perfis visitados -->
+    <div id="perfis-contador" class="perfis-contador" style="display:none">
+        <span id="perfis-contador-texto">Você explorou 0 de 5 perfis</span>
+        <div class="perfis-contador-barra">
+            <div id="perfis-contador-fill" class="perfis-contador-fill"></div>
+        </div>
     </div>
 </section>
 
@@ -218,14 +259,366 @@
     </div>
 </section>
 
+<!-- ===== IMPACTO ===== -->
+<section class="impacto">
+    <div class="impacto-inner">
+        <p class="section-label" style="color: var(--amber)">Impacto real</p>
+        <h2 class="impacto-titulo">O Empreenda Fácil em números</h2>
+        <p class="impacto-sub">Cada download representa um empreendedor dando um passo em direção ao crescimento.</p>
+
+        <div id="impacto-grid" class="impacto-grid">
+            <!-- Preenchido dinamicamente -->
+            <div class="impacto-loading">Carregando dados...</div>
+        </div>
+
+        <!-- Relatos -->
+        <div class="relatos-section">
+            <h3 class="relatos-titulo">O que dizem os empreendedores</h3>
+            <div id="relatos-grid" class="relatos-grid">
+                <div class="impacto-loading">Carregando relatos...</div>
+            </div>
+            <div class="relatos-cta">
+                <button class="btn-relato" onclick="abrirFormRelato()">
+                    ✍️ Compartilhar minha experiência
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- ===== FOOTER ===== -->
 <footer>
     <p class="footer-logo">Empreenda<strong>Fácil</strong></p>
     <p class="footer-info">Projeto de extensão acadêmica — Análise e Desenvolvimento de Sistemas</p>
-    <p class="footer-sub">Feito para apoiar microempreendedores e trabalhadores autônomos</p>
+    <p class="footer-sub">Feito para apoiar microempreendedores e trabalhadores autônomos de Araraquara, SP</p>
 </footer>
 
+<!-- ===== PAINEL ADMIN (oculto) ===== -->
+<div id="painel-admin" class="painel-admin" style="display:none">
+    <div class="painel-admin-box">
+        <div class="painel-admin-header">
+            <h3>⚙️ Painel Admin</h3>
+            <button onclick="fecharAdmin()">✕</button>
+        </div>
+        <div class="painel-admin-body">
+            <h4>📊 Downloads</h4>
+            <div id="admin-downloads"></div>
+            <h4 style="margin-top:24px">💬 Relatos Pendentes</h4>
+            <div id="admin-relatos"></div>
+        </div>
+    </div>
+</div>
+
 <script src="script.js"></script>
+
+<script>
+// ===== SUPABASE CONFIG =====
+const SUPABASE_URL = 'https://msptcmebshyjdqgiidwh.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zcHRjbWVic2h5amRxZ2lpZHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MzA1NTYsImV4cCI6MjA5NDEwNjU1Nn0.ttUv3iQo-RRr3AnfMSGudlec2UG1s1W0QVs0CWIR6to';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ===== AUTH =====
+let usuarioAtual = null;
+
+sb.auth.onAuthStateChange((event, session) => {
+    usuarioAtual = session?.user || null;
+    atualizarNavUsuario();
+});
+
+function atualizarNavUsuario() {
+    const area = document.getElementById('nav-usuario');
+    if (usuarioAtual) {
+        const nome = usuarioAtual.user_metadata?.full_name ||
+                     usuarioAtual.email.split('@')[0];
+        area.innerHTML = `
+            <span class="nav-usuario-nome">Olá, ${nome.split(' ')[0]}</span>
+            <button class="nav-login-btn" onclick="logout()">Sair</button>
+        `;
+    } else {
+        area.innerHTML = `<button class="nav-login-btn" onclick="abrirLogin()">Entrar</button>`;
+    }
+}
+
+async function loginGoogle() {
+    const { error } = await sb.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.href }
+    });
+    if (error) mostrarErroLogin('Erro ao entrar com Google.');
+}
+
+async function loginEmail() {
+    const email = document.getElementById('login-email').value;
+    const senha = document.getElementById('login-senha').value;
+    const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+    if (error) mostrarErroLogin('E-mail ou senha incorretos.');
+    else fecharLoginBtn();
+}
+
+async function cadastrarEmail() {
+    const email = document.getElementById('login-email').value;
+    const senha = document.getElementById('login-senha').value;
+    if (!email || !senha) { mostrarErroLogin('Preencha e-mail e senha.'); return; }
+    const { error } = await sb.auth.signUp({ email, password: senha });
+    if (error) mostrarErroLogin('Erro ao cadastrar. Tente outro e-mail.');
+    else mostrarErroLogin('✅ Cadastro feito! Verifique seu e-mail.', true);
+}
+
+async function logout() {
+    await sb.auth.signOut();
+}
+
+function mostrarErroLogin(msg, ok = false) {
+    const el = document.getElementById('login-erro');
+    el.textContent = msg;
+    el.style.color = ok ? '#1A7A4A' : '#C0392B';
+}
+
+// ===== MODAIS =====
+function abrirSobre() {
+    document.getElementById('modal-sobre').classList.add('ativo');
+}
+function fecharSobre(e) {
+    if (e.target === document.getElementById('modal-sobre'))
+        document.getElementById('modal-sobre').classList.remove('ativo');
+}
+function fecharSobreBtn() {
+    document.getElementById('modal-sobre').classList.remove('ativo');
+}
+
+function abrirLogin() {
+    document.getElementById('modal-login').classList.add('ativo');
+}
+function fecharLogin(e) {
+    if (e.target === document.getElementById('modal-login'))
+        document.getElementById('modal-login').classList.remove('ativo');
+}
+function fecharLoginBtn() {
+    document.getElementById('modal-login').classList.remove('ativo');
+}
+
+function abrirFormRelato() {
+    if (!usuarioAtual) { abrirLogin(); return; }
+    document.getElementById('modal-relato').classList.add('ativo');
+}
+function fecharRelato(e) {
+    if (e.target === document.getElementById('modal-relato'))
+        document.getElementById('modal-relato').classList.remove('ativo');
+}
+function fecharRelatoBtn() {
+    document.getElementById('modal-relato').classList.remove('ativo');
+}
+
+// ===== REGISTRAR CLIQUE =====
+async function registrarClique(item) {
+    try {
+        await sb.rpc('registrar_clique', { item_nome: item });
+    } catch(e) {}
+}
+
+// ===== CARREGAR DOWNLOADS =====
+async function carregarImpacto() {
+    const { data, error } = await sb.from('downloads').select('*');
+    const grid = document.getElementById('impacto-grid');
+    if (error || !data) {
+        grid.innerHTML = '<p style="color:var(--gray-500)">Dados indisponíveis no momento.</p>';
+        return;
+    }
+    const total = data.reduce((acc, d) => acc + d.cliques_exibidos, 0);
+    grid.innerHTML = `
+        <div class="impacto-card impacto-total">
+            <span class="impacto-num">${total}</span>
+            <span class="impacto-label">Downloads realizados</span>
+        </div>
+        ${data.map(d => `
+            <div class="impacto-card">
+                <span class="impacto-num">${d.cliques_exibidos}</span>
+                <span class="impacto-label">${d.label}</span>
+            </div>
+        `).join('')}
+    `;
+}
+
+// ===== CARREGAR RELATOS =====
+async function carregarRelatos() {
+    const { data, error } = await sb
+        .from('relatos')
+        .select('*')
+        .eq('aprovado', true)
+        .order('criado_em', { ascending: false })
+        .limit(6);
+    const grid = document.getElementById('relatos-grid');
+    if (error || !data || data.length === 0) {
+        grid.innerHTML = '<p class="relatos-vazio">Seja o primeiro a compartilhar sua experiência!</p>';
+        return;
+    }
+    grid.innerHTML = data.map(r => `
+        <div class="relato-card">
+            <div class="relato-perfil-badge">${r.perfil}</div>
+            <p class="relato-texto">"${r.texto}"</p>
+            <span class="relato-nome">— ${r.nome}</span>
+        </div>
+    `).join('');
+}
+
+// ===== ENVIAR RELATO =====
+async function enviarRelato() {
+    if (!usuarioAtual) { abrirLogin(); return; }
+    const perfil = document.getElementById('relato-perfil').value;
+    const texto  = document.getElementById('relato-texto').value;
+    const msg    = document.getElementById('relato-msg');
+
+    if (!perfil || !texto.trim()) {
+        msg.textContent = 'Preencha todos os campos.';
+        msg.style.color = '#C0392B';
+        return;
+    }
+
+    const nome = usuarioAtual.user_metadata?.full_name ||
+                 usuarioAtual.email.split('@')[0];
+
+    const { error } = await sb.from('relatos').insert([{
+        usuario_id: usuarioAtual.id,
+        nome, perfil, texto,
+        aprovado: false
+    }]);
+
+    if (error) {
+        msg.textContent = 'Erro ao enviar. Tente novamente.';
+        msg.style.color = '#C0392B';
+    } else {
+        msg.textContent = '✅ Relato enviado! Será publicado após aprovação.';
+        msg.style.color = '#1A7A4A';
+        setTimeout(() => fecharRelatoBtn(), 2500);
+    }
+}
+
+// ===== PERFIS VISITADOS =====
+const perfisVisitados = new Set();
+const PERFIS_ORIGINAIS = {};
+
+function marcarPerfilVisitado(key) {
+    perfisVisitados.add(key);
+    const visto = document.getElementById(`visto-${key}`);
+    if (visto) visto.innerHTML = '✓';
+
+    const total = perfisVisitados.size;
+    const contador = document.getElementById('perfis-contador');
+    const texto    = document.getElementById('perfis-contador-texto');
+    const fill     = document.getElementById('perfis-contador-fill');
+
+    contador.style.display = 'block';
+    texto.textContent = `Você explorou ${total} de 5 perfis`;
+    fill.style.width  = `${(total / 5) * 100}%`;
+}
+
+// ===== ANIMAÇÃO CONTADORES HERO =====
+function animarContadores() {
+    document.querySelectorAll('.hero-stat-num').forEach(el => {
+        const target = parseInt(el.dataset.target);
+        let current  = 0;
+        const step   = Math.ceil(target / 20);
+        const timer  = setInterval(() => {
+            current += step;
+            if (current >= target) { current = target; clearInterval(timer); }
+            el.textContent = current;
+        }, 60);
+    });
+}
+
+// Observar quando hero-stats entra na tela
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+        if (e.isIntersecting) { animarContadores(); observer.disconnect(); }
+    });
+}, { threshold: 0.5 });
+observer.observe(document.querySelector('.hero-stats'));
+
+// ===== PAINEL ADMIN =====
+// Acesso: pressionar Ctrl+Shift+A e digitar a senha
+const SENHA_ADMIN = 'empreendafacil2025';
+let bufferAdmin = '';
+
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === 'A') abrirAdmin();
+});
+
+async function abrirAdmin() {
+    const senha = prompt('Senha de administrador:');
+    if (senha !== SENHA_ADMIN) return;
+    document.getElementById('painel-admin').style.display = 'flex';
+    await carregarAdmin();
+}
+
+function fecharAdmin() {
+    document.getElementById('painel-admin').style.display = 'none';
+}
+
+async function carregarAdmin() {
+    // Downloads
+    const { data: dls } = await sb.from('downloads').select('*');
+    const admDl = document.getElementById('admin-downloads');
+    admDl.innerHTML = dls ? dls.map(d => `
+        <div class="admin-row">
+            <span>${d.label}</span>
+            <span>Real: <strong>${d.cliques_reais}</strong></span>
+            <input type="number" value="${d.cliques_exibidos}"
+                   onchange="atualizarExibido(${d.id}, this.value)"
+                   class="admin-input" title="Número exibido publicamente">
+            <small>exibido</small>
+        </div>
+    `).join('') : 'Erro ao carregar.';
+
+    // Relatos pendentes
+    const { data: rels } = await sb.from('relatos')
+        .select('*').eq('aprovado', false).order('criado_em', { ascending: false });
+    const admRel = document.getElementById('admin-relatos');
+    admRel.innerHTML = rels && rels.length ? rels.map(r => `
+        <div class="admin-row admin-relato-row">
+            <div>
+                <strong>${r.nome}</strong> · ${r.perfil}<br>
+                <span>${r.texto}</span>
+            </div>
+            <div class="admin-relato-acoes">
+                <button onclick="aprovarRelato(${r.id})" class="admin-btn-aprovar">✓ Aprovar</button>
+                <button onclick="apagarRelato(${r.id})" class="admin-btn-apagar">✕ Apagar</button>
+            </div>
+        </div>
+    `).join('') : '<p style="color:var(--gray-500)">Nenhum relato pendente.</p>';
+}
+
+async function atualizarExibido(id, valor) {
+    await sb.from('downloads').update({ cliques_exibidos: parseInt(valor) }).eq('id', id);
+    carregarImpacto();
+}
+
+async function aprovarRelato(id) {
+    await sb.from('relatos').update({ aprovado: true }).eq('id', id);
+    await carregarAdmin();
+    await carregarRelatos();
+}
+
+async function apagarRelato(id) {
+    if (!confirm('Apagar este relato?')) return;
+    await sb.from('relatos').delete().eq('id', id);
+    await carregarAdmin();
+}
+
+// ===== INIT =====
+window.addEventListener('DOMContentLoaded', () => {
+    carregarImpacto();
+    carregarRelatos();
+
+    // Sobrescreve selecionarPerfil para marcar visitados
+    if (typeof selecionarPerfil === 'function') {
+        const _orig = selecionarPerfil;
+        window.selecionarPerfil = function(key, btnEl) {
+            _orig(key, btnEl);
+            marcarPerfilVisitado(key);
+        };
+    }
+});
+</script>
 
 </body>
 </html>
