@@ -90,6 +90,17 @@
             <option value="Profissional de Beleza">Profissional de Beleza</option>
             <option value="Produtor Manual">Produtor Manual</option>
         </select>
+        <div class="modal-estrelas-wrap">
+            <span class="modal-estrelas-label">Sua avaliação <span style="color:#C0392B">*</span></span>
+            <div class="modal-estrelas" id="estrelas-container">
+                <span class="estrela" data-val="1" onclick="selecionarEstrela(1)">★</span>
+                <span class="estrela" data-val="2" onclick="selecionarEstrela(2)">★</span>
+                <span class="estrela" data-val="3" onclick="selecionarEstrela(3)">★</span>
+                <span class="estrela" data-val="4" onclick="selecionarEstrela(4)">★</span>
+                <span class="estrela" data-val="5" onclick="selecionarEstrela(5)">★</span>
+            </div>
+            <span id="estrelas-texto" class="modal-estrelas-texto">Selecione uma nota</span>
+        </div>
         <textarea id="relato-texto" class="modal-input modal-textarea"
             placeholder="Conte como o Empreenda Fácil te ajudou..."></textarea>
         <button class="btn-primary modal-btn-entrar" onclick="enviarRelato()">Enviar Relato</button>
@@ -179,7 +190,7 @@
                 <li><span class="ebook-check">✓</span> Mais de 30 páginas com linguagem simples e exemplos práticos</li>
             </ul>
             <div class="ebook-acoes">
-                <a href="pdf/EmpreendaFacil_Ebook.pdf" download
+                <a href="pdf/EmpreendaFacil_Ebook.pdf" target="_blank"
                    class="btn-primary"
                    onclick="registrarClique('ebook')">
                     ⬇ Baixar o Guia Gratuitamente
@@ -342,7 +353,7 @@ function atualizarNavUsuario() {
 async function loginGoogle() {
     const { error } = await sb.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: window.location.href }
+        options: { redirectTo: 'https://empreendafacil.vercel.app' }
     });
     if (error) mostrarErroLogin('Erro ao entrar com Google.');
 }
@@ -359,9 +370,19 @@ async function cadastrarEmail() {
     const email = document.getElementById('login-email').value;
     const senha = document.getElementById('login-senha').value;
     if (!email || !senha) { mostrarErroLogin('Preencha e-mail e senha.'); return; }
-    const { error } = await sb.auth.signUp({ email, password: senha });
-    if (error) mostrarErroLogin('Erro ao cadastrar. Tente outro e-mail.');
-    else mostrarErroLogin('✅ Cadastro feito! Verifique seu e-mail.', true);
+    const { data, error } = await sb.auth.signUp({
+        email,
+        password: senha,
+        options: { emailRedirectTo: null }
+    });
+    if (error) {
+        mostrarErroLogin('Erro ao cadastrar. Tente outro e-mail.');
+    } else if (data?.user) {
+        // Tenta logar direto após cadastro
+        const { error: loginError } = await sb.auth.signInWithPassword({ email, password: senha });
+        if (loginError) mostrarErroLogin('Cadastro feito! Agora clique em Entrar.');
+        else fecharLoginBtn();
+    }
 }
 
 async function logout() {
@@ -452,13 +473,28 @@ async function carregarRelatos() {
         grid.innerHTML = '<p class="relatos-vazio">Seja o primeiro a compartilhar sua experiência!</p>';
         return;
     }
-    grid.innerHTML = data.map(r => `
+    grid.innerHTML = data.map(r => {
+        const estrelas = r.nota ? '★'.repeat(r.nota) + '☆'.repeat(5 - r.nota) : '';
+        return `
         <div class="relato-card">
             <div class="relato-perfil-badge">${r.perfil}</div>
+            ${estrelas ? `<div class="relato-estrelas">${estrelas}</div>` : ''}
             <p class="relato-texto">"${r.texto}"</p>
             <span class="relato-nome">— ${r.nome}</span>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
+}
+
+// ===== ESTRELAS =====
+let notaSelecionada = 0;
+
+function selecionarEstrela(val) {
+    notaSelecionada = val;
+    const textos = ['', 'Ruim', 'Regular', 'Bom', 'Muito bom', 'Excelente!'];
+    document.getElementById('estrelas-texto').textContent = textos[val];
+    document.querySelectorAll('.estrela').forEach(e => {
+        e.classList.toggle('ativa', parseInt(e.dataset.val) <= val);
+    });
 }
 
 // ===== ENVIAR RELATO =====
@@ -473,6 +509,11 @@ async function enviarRelato() {
         msg.style.color = '#C0392B';
         return;
     }
+    if (!notaSelecionada) {
+        msg.textContent = 'Selecione uma nota de 1 a 5 estrelas.';
+        msg.style.color = '#C0392B';
+        return;
+    }
 
     const nome = usuarioAtual.user_metadata?.full_name ||
                  usuarioAtual.email.split('@')[0];
@@ -480,6 +521,7 @@ async function enviarRelato() {
     const { error } = await sb.from('relatos').insert([{
         usuario_id: usuarioAtual.id,
         nome, perfil, texto,
+        nota: notaSelecionada,
         aprovado: false
     }]);
 
@@ -489,6 +531,9 @@ async function enviarRelato() {
     } else {
         msg.textContent = '✅ Relato enviado! Será publicado após aprovação.';
         msg.style.color = '#1A7A4A';
+        notaSelecionada = 0;
+        document.querySelectorAll('.estrela').forEach(e => e.classList.remove('ativa'));
+        document.getElementById('estrelas-texto').textContent = 'Selecione uma nota';
         setTimeout(() => fecharRelatoBtn(), 2500);
     }
 }
