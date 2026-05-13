@@ -1483,3 +1483,124 @@ footer strong { color: var(--amber); }
     margin-bottom: 10px;
     letter-spacing: 2px;
 }
+
+/* ===== NAV USUARIO BTN ===== */
+.nav-usuario-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 100px;
+    padding: 6px 14px 6px 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.nav-usuario-btn:hover {
+    background: rgba(255,255,255,0.14);
+}
+.nav-usuario-avatar {
+    width: 28px; height: 28px;
+    background: var(--amber);
+    color: var(--navy);
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.nav-usuario-seta {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+}
+
+/* ===== MODAL PERFIL ===== */
+.perfil-avatar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: var(--gray-100);
+    border-radius: 12px;
+}
+.perfil-avatar-circulo {
+    width: 64px; height: 64px;
+    background: var(--amber);
+    color: var(--navy);
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+.perfil-avatar-acoes {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.perfil-avatar-label {
+    display: inline-block;
+    padding: 7px 14px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--navy);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.perfil-avatar-label:hover {
+    border-color: var(--amber);
+    background: var(--amber-pale);
+}
+.perfil-avatar-dica {
+    font-size: 11px;
+    color: var(--gray-500);
+}
+.perfil-acoes-extra {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+.btn-perfil-sair {
+    flex: 1;
+    padding: 11px;
+    background: transparent;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-700);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-perfil-sair:hover {
+    border-color: var(--gray-500);
+    background: var(--gray-100);
+}
+.btn-perfil-deletar {
+    flex: 1;
+    padding: 11px;
+    background: transparent;
+    border: 1px solid #FADBD8;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #C0392B;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-perfil-deletar:hover {
+    background: #FADBD8;
+}
