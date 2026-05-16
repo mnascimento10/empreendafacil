@@ -435,7 +435,9 @@ async function atualizarNavUsuario() {
         const nome = data?.nome ||
                      usuarioAtual.user_metadata?.full_name ||
                      usuarioAtual.email.split('@')[0];
-        const inicial  = nome.charAt(0).toUpperCase();
+        const nomeSeguro = (nome || '').replace(/[<>]/g, '');
+        const nomeExibicao = nomeSeguro.split(' ')[0];
+        const inicial  = nomeExibicao.charAt(0).toUpperCase();
         const avatarSrc = data?.avatar_url || usuarioAtual.user_metadata?.avatar_url || null;
         const avatarHTML = avatarSrc
             ? `<img src="${avatarSrc}?t=${Date.now()}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
@@ -443,7 +445,7 @@ async function atualizarNavUsuario() {
         area.innerHTML = `
             <button class="nav-usuario-btn" onclick="abrirPerfil()">
                 <span class="nav-usuario-avatar">${avatarHTML}</span>
-                <span class="nav-usuario-nome">Olá, ${nome.split(' ')[0]}</span>
+                <span class="nav-usuario-nome">Olá, ${nomeExibicao}</span>
                 <span class="nav-usuario-seta">▾</span>
             </button>`;
     } else {
@@ -674,7 +676,20 @@ async function deletarConta() {
         }
     }
 
+    // Deletar relatos do usuário
+    await sb.from('relatos').delete().eq('usuario_id', usuarioAtual.id);
+    
+    // Deletar avatar do storage
+    const { data: avatares } = await sb.storage.from('avatares').list(`${usuarioAtual.id}`);
+    if (avatares && avatares.length > 0) {
+        const paths = avatares.map(f => `${usuarioAtual.id}/${f.name}`);
+        await sb.storage.from('avatares').remove(paths);
+    }
+    
+    // Deletar perfil
     await sb.from('perfis').delete().eq('id', usuarioAtual.id);
+    
+    // Logout
     await sb.auth.signOut();
     fecharTodosModais();
     alert('Conta excluída com sucesso. Até mais!');
@@ -752,16 +767,22 @@ function renderImpacto(data) {
             <span class="impacto-num">${total}</span>
             <span class="impacto-label">Downloads realizados</span>
         </div>
-        ${data.map(d => `
+        ${data.map(d => {
+            const labelSeguro = (d.label || '').replace(/[<>]/g, '');
+            return `
             <div class="impacto-card">
                 <span class="impacto-num">${d.cliques_exibidos || 0}</span>
-                <span class="impacto-label">${d.label}</span>
-            </div>`).join('')}`;
+                <span class="impacto-label">${labelSeguro}</span>
+            </div>`;
+        }).join('')}`;
 }
 
 sb.channel('downloads-realtime')
     .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'downloads' }, () => {
         carregarImpacto();
+    })
+    .on('error', (err) => {
+        console.error('Erro no realtime de downloads:', err);
     })
     .subscribe();
 
@@ -778,12 +799,16 @@ async function carregarRelatos() {
         const estrelas = r.nota
             ? '★'.repeat(r.nota) + '☆'.repeat(5 - r.nota)
             : '';
+        // Sanitizar valores para prevenir XSS
+        const nomeSeguro = (r.nome || '').replace(/[<>]/g, '');
+        const perfilSeguro = (r.perfil || '').replace(/[<>]/g, '');
+        const textoSeguro = (r.texto || '').replace(/[<>]/g, '');
         return `
         <div class="relato-card">
-            <div class="relato-perfil-badge">${r.perfil}</div>
+            <div class="relato-perfil-badge">${perfilSeguro}</div>
             ${estrelas ? `<div class="relato-estrelas">${estrelas}</div>` : ''}
-            <p class="relato-texto">"${r.texto}"</p>
-            <span class="relato-nome">— ${r.nome}</span>
+            <p class="relato-texto">"${textoSeguro}"</p>
+            <span class="relato-nome">— ${nomeSeguro}</span>
         </div>`;
     }).join('');
 }
@@ -865,18 +890,23 @@ async function carregarAdmin() {
     }
 
     document.getElementById('admin-relatos').innerHTML = rels?.length
-        ? rels.map(r => `
+        ? rels.map(r => {
+            const nomeSeguro = (r.nome || '').replace(/[<>]/g, '');
+            const perfilSeguro = (r.perfil || '').replace(/[<>]/g, '');
+            const textoSeguro = (r.texto || '').replace(/[<>]/g, '');
+            return `
             <div class="admin-row admin-relato-row">
                 <div>
-                    <strong>${r.nome}</strong> · ${r.perfil}
+                    <strong>${nomeSeguro}</strong> · ${perfilSeguro}
                     ${r.nota ? ' · ' + '★'.repeat(r.nota) : ''}<br>
-                    <span>${r.texto}</span>
+                    <span>${textoSeguro}</span>
                 </div>
                 <div class="admin-relato-acoes">
                     <button onclick="aprovarRelato(${r.id})" class="admin-btn-aprovar">✓ Aprovar</button>
                     <button onclick="apagarRelato(${r.id})"  class="admin-btn-apagar">✕ Apagar</button>
                 </div>
-            </div>`).join('')
+            </div>`;
+        }).join('')
         : '<p style="color:var(--gray-500)">Nenhum relato pendente.</p>';
 }
 
