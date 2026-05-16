@@ -3,37 +3,10 @@ function scrollParaPerfis() {
     document.getElementById("perfis").scrollIntoView({ behavior: "smooth" });
 }
 
-// ===== TRACKING (Supabase — registrar_clique) =====
-const ITEM_POR_LINK = {
-    "pdf/Tutorial_GoogleMeuNegocio.pdf": "pdf_googlemaps",
-    "pdf/Tutorial_Instragram.pdf": "pdf_instagram",
-    "pdf/Tutorial_WhatsappBusiness.pdf": "pdf_whatsapp",
-    "pdf/Tutorial_IAdoCanva.pdf": "pdf_canva",
-    "pdf/Tutorial_GoogleAgenda.pdf": "pdf_agenda",
-    "https://docs.google.com/spreadsheets/d/1nJgnQxeG4onwF_qRXNc0iPcShPBTy0B0LkhIp5mUND8/copy": "planilha_fluxo",
-    "https://docs.google.com/spreadsheets/d/1qP-9rMoj8apNPkCN7F895Oo0NuSd-l9hkDuqrdz8gvk/copy": "planilha_motorista",
-    "https://docs.google.com/spreadsheets/d/1N4QzJ7iQ-Azb9AIPGLGcvHXJEYskXQLTmQb1jGxqyRw/copy": "planilha_produtor",
-};
-
-function itemTrackingPorLink(link) {
-    if (!link) return null;
-    if (ITEM_POR_LINK[link]) return ITEM_POR_LINK[link];
-    const arquivo = link.split("/").pop().split("?")[0];
-    for (const [chave, item] of Object.entries(ITEM_POR_LINK)) {
-        if (chave.endsWith(arquivo)) return item;
-    }
-    return null;
-}
-
-function aoClicarMaterial(item) {
-    if (item && typeof registrarClique === "function") {
-        registrarClique(item);
-    }
-}
-
 // ===== DADOS DOS PERFIS =====
 const perfis = {
 
+    // ----------------------------------------------------------------
     mei: {
         titulo: "MEI — Organize e profissionalize seu negócio",
         descricao: "Se você é MEI, o maior desafio normalmente não é falta de trabalho — é não ter organização e presença digital. Aqui você encontra ferramentas simples para aparecer para novos clientes, atender melhor e controlar seu dinheiro.",
@@ -96,6 +69,7 @@ const perfis = {
         ]
     },
 
+    // ----------------------------------------------------------------
     autonomo: {
         titulo: "Autônomo — Fortaleça sua imagem profissional",
         descricao: "Como autônomo, sua renda depende diretamente da sua organização e da forma como você se apresenta. Pequenos ajustes já fazem grande diferença na quantidade de clientes e no valor que você consegue cobrar.",
@@ -161,6 +135,7 @@ const perfis = {
         ]
     },
 
+    // ----------------------------------------------------------------
     motorista: {
         titulo: "Motorista de App — Ganhe mais e controle seu dinheiro",
         descricao: "Trabalhar com aplicativos exige estratégia. Não basta rodar mais — é preciso saber quando, onde e como trabalhar para realmente ter lucro.",
@@ -231,6 +206,7 @@ const perfis = {
         ]
     },
 
+    // ----------------------------------------------------------------
     beleza: {
         titulo: "Profissional de Beleza — Atraia clientes e fidelize",
         descricao: "Na área da beleza, a imagem e a organização fazem toda a diferença. Clientes escolhem quem transmite confiança, mostra resultados e oferece um bom atendimento.",
@@ -291,6 +267,7 @@ const perfis = {
         ]
     },
 
+    // ----------------------------------------------------------------
     produtor: {
         titulo: "Produtor Manual — Venda mais e organize sua produção",
         descricao: "Quem trabalha com produtos manuais precisa não só produzir bem, mas também saber divulgar, organizar pedidos e calcular corretamente o preço para ter lucro de verdade.",
@@ -374,8 +351,9 @@ const perfis = {
 // ===== RENDERIZAÇÃO DO PERFIL =====
 function selecionarPerfil(key, btnEl) {
 
-    document.querySelectorAll(".perfil-btn").forEach(b => b.classList.remove("active"));
-    if (btnEl) btnEl.classList.add("active");
+    // Atualiza botão ativo
+    document.querySelectorAll('.perfil-btn').forEach(b => b.classList.remove('active'));
+    if (btnEl) btnEl.classList.add('active');
 
     const dados = perfis[key];
     if (!dados) return;
@@ -392,12 +370,11 @@ function selecionarPerfil(key, btnEl) {
             </div>
             <p>${sec.desc}</p>`;
 
+        // Materiais (cards de PDF)
         if (sec.materiais && sec.materiais.length) {
             html += `<div class="materiais-grid">`;
             sec.materiais.forEach(m => {
-                const track = itemTrackingPorLink(m.link);
-                const onTrack = track ? ` onclick="aoClicarMaterial('${track}')"` : "";
-                html += `<a href="${m.link}" target="_blank" rel="noopener" class="material-card"${onTrack}>
+                html += `<a href="${m.link}" target="_blank" class="material-card">
                     <div class="material-card-icon">${m.icon}</div>
                     <div class="material-card-text">
                         <strong>${m.nome}</strong>
@@ -408,10 +385,9 @@ function selecionarPerfil(key, btnEl) {
             html += `</div>`;
         }
 
+        // Planilha
         if (sec.planilha) {
-            const track = itemTrackingPorLink(sec.planilha.link);
-            const onTrack = track ? ` onclick="aoClicarMaterial('${track}')"` : "";
-            html += `<a href="${sec.planilha.link}" target="_blank" rel="noopener" class="planilha-card"${onTrack}>
+            html += `<a href="${sec.planilha.link}" target="_blank" class="planilha-card">
                 <div class="planilha-icon">📊</div>
                 <div class="planilha-text">
                     <strong>${sec.planilha.nome}</strong>
@@ -421,10 +397,11 @@ function selecionarPerfil(key, btnEl) {
             </a>`;
         }
 
+        // Dicas
         if (sec.dicas) {
             html += `<div class="dica-box">
                 <div class="dica-box-title">${sec.dicas.titulo}</div>
-                <ul>${sec.dicas.items.map(d => `<li>${d}</li>`).join("")}</ul>
+                <ul>${sec.dicas.items.map(d => `<li>${d}</li>`).join('')}</ul>
             </div>`;
         }
 
