@@ -387,7 +387,8 @@
 </div>
 
 <script src="script.js"></script>
-<script>// ===== SUPABASE CONFIG =====
+<script>
+// ===== SUPABASE CONFIG =====
 const SUPABASE_URL = 'https://msptcmebshyjdqgiidwh.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zcHRjbWVic2h5amRxZ2lpZHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MzA1NTYsImV4cCI6MjA5NDEwNjU1Nn0.ttUv3iQo-RRr3AnfMSGudlec2UG1s1W0QVs0CWIR6to';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -396,14 +397,16 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let usuarioAtual = null;
 let avatarArquivo = null;
 let notaSelecionada = 0;
-let adminSenhaSessao = null;
 
 // ===== AUTH STATE =====
 sb.auth.onAuthStateChange(async (event, session) => {
     usuarioAtual = session?.user || null;
     await atualizarNavUsuario();
-    if (event === 'SIGNED_IN' && usuarioAtual) {
-        await garantirPerfil();
+    if (event === 'SIGNED_IN') {
+        // Garante que perfil existe no banco
+        if (usuarioAtual) {
+            await garantirPerfil();
+        }
     }
 });
 
@@ -435,9 +438,7 @@ async function atualizarNavUsuario() {
         const nome = data?.nome ||
                      usuarioAtual.user_metadata?.full_name ||
                      usuarioAtual.email.split('@')[0];
-        const nomeSeguro = (nome || '').replace(/[<>]/g, '');
-        const nomeExibicao = nomeSeguro.split(' ')[0];
-        const inicial  = nomeExibicao.charAt(0).toUpperCase();
+        const inicial  = nome.charAt(0).toUpperCase();
         const avatarSrc = data?.avatar_url || usuarioAtual.user_metadata?.avatar_url || null;
         const avatarHTML = avatarSrc
             ? `<img src="${avatarSrc}?t=${Date.now()}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
@@ -445,7 +446,7 @@ async function atualizarNavUsuario() {
         area.innerHTML = `
             <button class="nav-usuario-btn" onclick="abrirPerfil()">
                 <span class="nav-usuario-avatar">${avatarHTML}</span>
-                <span class="nav-usuario-nome">Olá, ${nomeExibicao}</span>
+                <span class="nav-usuario-nome">Olá, ${nome.split(' ')[0]}</span>
                 <span class="nav-usuario-seta">▾</span>
             </button>`;
     } else {
@@ -458,10 +459,12 @@ function abrirModal(id)  { document.getElementById(id).classList.add('ativo'); }
 function fecharModal(id) { document.getElementById(id).classList.remove('ativo'); }
 function fecharSeClicouFora(e, id) { if (e.target === document.getElementById(id)) fecharModal(id); }
 
+// ===== MODAL SOBRE =====
 function abrirSobre()              { abrirModal('modal-sobre'); }
 function fecharSobre(e)            { fecharSeClicouFora(e, 'modal-sobre'); }
 function fecharSobreBtn()          { fecharModal('modal-sobre'); }
 
+// ===== MODAL LOGIN =====
 function abrirLogin()  { fecharTodosModais(); abrirModal('modal-login'); }
 function fecharLogin(e){ fecharSeClicouFora(e, 'modal-login'); }
 function fecharLoginBtn(){ fecharModal('modal-login'); }
@@ -488,6 +491,7 @@ async function loginEmail() {
     else fecharLoginBtn();
 }
 
+// ===== MODAL CADASTRO =====
 function abrirCadastro()  { fecharModal('modal-login'); abrirModal('modal-cadastro'); }
 function fecharCadastro(e){ fecharSeClicouFora(e, 'modal-cadastro'); }
 function fecharCadastroBtn(){ fecharModal('modal-cadastro'); }
@@ -518,9 +522,11 @@ async function criarConta() {
     }
 
     if (data?.user) {
+        // Insere perfil manualmente (trigger pode não rodar imediatamente)
         await sb.from('perfis').upsert({
             id: data.user.id, nome, email, tem_senha: true
         });
+        // Loga direto
         const { error: loginErr } = await sb.auth.signInWithPassword({ email, password: senha });
         if (loginErr) {
             mostrarErro('cad-erro','Conta criada! Faça login com suas credenciais.', true);
@@ -531,6 +537,7 @@ async function criarConta() {
     }
 }
 
+// ===== MODAL PERFIL =====
 async function abrirPerfil() {
     if (!usuarioAtual) return;
 
@@ -545,11 +552,13 @@ async function abrirPerfil() {
     document.getElementById('perfil-nome').value  = nome;
     document.getElementById('perfil-email').value = email;
 
+    // Avatar
     const preview = document.getElementById('perfil-avatar-preview');
     preview.innerHTML = avatar
         ? `<img src="${avatar}?t=${Date.now()}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
         : nome.charAt(0).toUpperCase();
 
+    // Seção senha — Google vê "criar senha", e-mail vê "alterar senha"
     const senhaSec = document.getElementById('perfil-senha-section');
     if (temSenha) {
         senhaSec.innerHTML = `
@@ -597,6 +606,7 @@ async function salvarPerfil() {
 
     let avatarUrl = null;
 
+    // Upload avatar se tiver arquivo novo
     if (avatarArquivo) {
         const ext  = avatarArquivo.name.split('.').pop().toLowerCase();
         const path = `${usuarioAtual.id}/avatar.${ext}`;
@@ -610,16 +620,19 @@ async function salvarPerfil() {
         avatarUrl = urlData.publicUrl;
     }
 
+    // Atualiza perfil no banco
     const update = { nome };
     if (avatarUrl) update.avatar_url = avatarUrl;
 
     const { error: dbErr } = await sb.from('perfis').update(update).eq('id', usuarioAtual.id);
     if (dbErr) { mostrarErro('perfil-msg','Erro ao salvar perfil.'); return; }
 
+    // Atualiza metadata auth
     const metaUpdate = { data: { full_name: nome, nome } };
     if (avatarUrl) metaUpdate.data.avatar_url = avatarUrl;
     await sb.auth.updateUser(metaUpdate);
 
+    // Atualiza senha se preenchida
     if (senha) {
         const { error: senhaErr } = await sb.auth.updateUser({ password: senha });
         if (senhaErr) { mostrarErro('perfil-msg','Perfil salvo, mas erro na senha. Tente novamente.'); return; }
@@ -636,6 +649,7 @@ async function logout() {
     fecharTodosModais();
 }
 
+// ===== MODAL DELETAR CONTA =====
 async function abrirDeletarConta() {
     const { data } = await sb.from('perfis').select('tem_senha').eq('id', usuarioAtual.id).single();
     const temSenha = data?.tem_senha ?? true;
@@ -666,35 +680,26 @@ async function deletarConta() {
     const temSenha = data?.tem_senha ?? true;
 
     if (temSenha) {
+        // Confirma com senha — tenta reautenticar
         const { error } = await sb.auth.signInWithPassword({
             email: usuarioAtual.email, password: confirmVal
         });
         if (error) { mostrarErro('deletar-msg','Senha incorreta.'); return; }
     } else {
+        // Confirma com e-mail
         if (confirmVal.toLowerCase() !== usuarioAtual.email.toLowerCase()) {
             mostrarErro('deletar-msg','E-mail incorreto.'); return;
         }
     }
 
-    // Deletar relatos do usuário
-    await sb.from('relatos').delete().eq('usuario_id', usuarioAtual.id);
-    
-    // Deletar avatar do storage
-    const { data: avatares } = await sb.storage.from('avatares').list(`${usuarioAtual.id}`);
-    if (avatares && avatares.length > 0) {
-        const paths = avatares.map(f => `${usuarioAtual.id}/${f.name}`);
-        await sb.storage.from('avatares').remove(paths);
-    }
-    
-    // Deletar perfil
+    // Deleta perfil (cascade deleta relatos vinculados)
     await sb.from('perfis').delete().eq('id', usuarioAtual.id);
-    
-    // Logout
     await sb.auth.signOut();
     fecharTodosModais();
     alert('Conta excluída com sucesso. Até mais!');
 }
 
+// ===== ESTRELAS =====
 function selecionarEstrela(val) {
     notaSelecionada = val;
     const textos = ['','Ruim','Regular','Bom','Muito bom','Excelente!'];
@@ -704,6 +709,7 @@ function selecionarEstrela(val) {
     });
 }
 
+// ===== MODAL RELATO =====
 function abrirFormRelato() {
     if (!usuarioAtual) { abrirLogin(); return; }
     notaSelecionada = 0;
@@ -741,20 +747,14 @@ async function enviarRelato() {
     }
 }
 
+// ===== REGISTRAR CLIQUE =====
 async function registrarClique(item) {
-    try {
-        await sb.rpc('registrar_clique', { item_nome: item });
-        if (typeof carregarImpacto === 'function') carregarImpacto();
-    } catch (e) {}
+    try { await sb.rpc('registrar_clique', { item_nome: item }); } catch(e) {}
 }
 
+// ===== CARREGAR IMPACTO (tempo real) =====
 async function carregarImpacto() {
-    const grid = document.getElementById('impacto-grid');
-    const { data, error } = await sb.from('downloads').select('*').order('id');
-    if (error || !data) {
-        if (grid) grid.innerHTML = '<p class="impacto-loading">Não foi possível carregar os dados.</p>';
-        return;
-    }
+    const { data } = await sb.from('downloads').select('*').order('id');
     renderImpacto(data);
 }
 
@@ -767,25 +767,21 @@ function renderImpacto(data) {
             <span class="impacto-num">${total}</span>
             <span class="impacto-label">Downloads realizados</span>
         </div>
-        ${data.map(d => {
-            const labelSeguro = (d.label || '').replace(/[<>]/g, '');
-            return `
+        ${data.map(d => `
             <div class="impacto-card">
                 <span class="impacto-num">${d.cliques_exibidos || 0}</span>
-                <span class="impacto-label">${labelSeguro}</span>
-            </div>`;
-        }).join('')}`;
+                <span class="impacto-label">${d.label}</span>
+            </div>`).join('')}`;
 }
 
+// Tempo real — atualiza contador sem recarregar a página
 sb.channel('downloads-realtime')
     .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'downloads' }, () => {
         carregarImpacto();
     })
-    .on('error', (err) => {
-        console.error('Erro no realtime de downloads:', err);
-    })
     .subscribe();
 
+// ===== CARREGAR RELATOS =====
 async function carregarRelatos() {
     const { data } = await sb.from('relatos')
         .select('*').eq('aprovado', true)
@@ -799,20 +795,17 @@ async function carregarRelatos() {
         const estrelas = r.nota
             ? '★'.repeat(r.nota) + '☆'.repeat(5 - r.nota)
             : '';
-        // Sanitizar valores para prevenir XSS
-        const nomeSeguro = (r.nome || '').replace(/[<>]/g, '');
-        const perfilSeguro = (r.perfil || '').replace(/[<>]/g, '');
-        const textoSeguro = (r.texto || '').replace(/[<>]/g, '');
         return `
         <div class="relato-card">
-            <div class="relato-perfil-badge">${perfilSeguro}</div>
+            <div class="relato-perfil-badge">${r.perfil}</div>
             ${estrelas ? `<div class="relato-estrelas">${estrelas}</div>` : ''}
-            <p class="relato-texto">"${textoSeguro}"</p>
-            <span class="relato-nome">— ${nomeSeguro}</span>
+            <p class="relato-texto">"${r.texto}"</p>
+            <span class="relato-nome">— ${r.nome}</span>
         </div>`;
     }).join('');
 }
 
+// ===== PERFIS VISITADOS =====
 const perfisVisitados = new Set();
 
 function marcarPerfilVisitado(key) {
@@ -830,6 +823,7 @@ function marcarPerfilVisitado(key) {
     fill.style.width  = `${(total / 5) * 100}%`;
 }
 
+// ===== ANIMAÇÃO HERO =====
 function animarContadores() {
     document.querySelectorAll('.hero-stat-num').forEach(el => {
         const target = parseInt(el.dataset.target);
@@ -847,7 +841,8 @@ const observer = new IntersectionObserver((entries) => {
 const heroStats = document.querySelector('.hero-stats');
 if (heroStats) observer.observe(heroStats);
 
-const SENHA_ADMIN = '3MPR33ND4_F4C1L_20102002';
+// ===== PAINEL ADMIN =====
+const SENHA_ADMIN = 'empreendafacil2025';
 
 document.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.shiftKey && e.key === 'A') abrirAdmin();
@@ -856,7 +851,6 @@ document.addEventListener('keydown', (e) => {
 async function abrirAdmin() {
     const senha = prompt('Senha de administrador:');
     if (senha !== SENHA_ADMIN) return;
-    adminSenhaSessao = senha;
     document.getElementById('painel-admin').style.display = 'flex';
     await carregarAdmin();
 }
@@ -877,69 +871,43 @@ async function carregarAdmin() {
                        class="admin-input" title="Número exibido publicamente">
                 <small>exibido</small>
             </div>`).join('')
-        : '<p>Erro ao carregar downloads.</p>';
+        : 'Erro.';
 
-    const { data: rels, error: errRel } = await sb.rpc('admin_listar_pendentes', {
-        admin_senha: adminSenhaSessao
-    });
-
-    if (errRel) {
-        document.getElementById('admin-relatos').innerHTML =
-            '<p style="color:#C0392B">Erro no painel. Execute supabase-fixes.sql no Supabase.</p>';
-        return;
-    }
-
+    const { data: rels } = await sb.from('relatos')
+        .select('*').eq('aprovado', false).order('criado_em', { ascending: false });
     document.getElementById('admin-relatos').innerHTML = rels?.length
-        ? rels.map(r => {
-            const nomeSeguro = (r.nome || '').replace(/[<>]/g, '');
-            const perfilSeguro = (r.perfil || '').replace(/[<>]/g, '');
-            const textoSeguro = (r.texto || '').replace(/[<>]/g, '');
-            return `
+        ? rels.map(r => `
             <div class="admin-row admin-relato-row">
                 <div>
-                    <strong>${nomeSeguro}</strong> · ${perfilSeguro}
+                    <strong>${r.nome}</strong> · ${r.perfil}
                     ${r.nota ? ' · ' + '★'.repeat(r.nota) : ''}<br>
-                    <span>${textoSeguro}</span>
+                    <span>${r.texto}</span>
                 </div>
                 <div class="admin-relato-acoes">
                     <button onclick="aprovarRelato(${r.id})" class="admin-btn-aprovar">✓ Aprovar</button>
                     <button onclick="apagarRelato(${r.id})"  class="admin-btn-apagar">✕ Apagar</button>
                 </div>
-            </div>`;
-        }).join('')
+            </div>`).join('')
         : '<p style="color:var(--gray-500)">Nenhum relato pendente.</p>';
 }
 
 async function atualizarExibido(id, valor) {
-    const { error } = await sb.rpc('admin_atualizar_exibido', {
-        download_id: id,
-        novo_valor: parseInt(valor, 10) || 0,
-        admin_senha: adminSenhaSessao
-    });
-    if (error) alert('Não foi possível atualizar. Confira se rodou supabase-fixes.sql.');
-    await carregarImpacto();
+    await sb.from('downloads').update({ cliques_exibidos: parseInt(valor) }).eq('id', id);
 }
 
 async function aprovarRelato(id) {
-    const { error } = await sb.rpc('admin_aprovar_relato', {
-        relato_id: id,
-        admin_senha: adminSenhaSessao
-    });
-    if (error) alert('Erro ao aprovar relato.');
+    await sb.from('relatos').update({ aprovado: true }).eq('id', id);
     await carregarAdmin();
     await carregarRelatos();
 }
 
 async function apagarRelato(id) {
     if (!confirm('Apagar este relato?')) return;
-    const { error } = await sb.rpc('admin_apagar_relato', {
-        relato_id: id,
-        admin_senha: adminSenhaSessao
-    });
-    if (error) alert('Erro ao apagar relato.');
+    await sb.from('relatos').delete().eq('id', id);
     await carregarAdmin();
 }
 
+// ===== INIT =====
 window.addEventListener('DOMContentLoaded', () => {
     carregarImpacto();
     carregarRelatos();
@@ -953,11 +921,11 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Utilidade
 function mostrarErro(id, msg, ok=false) {
     const el = document.getElementById(id);
     if (el) { el.textContent = msg; el.style.color = ok ? '#1A7A4A' : '#C0392B'; }
 }
-
 </script>
 
 </body>
