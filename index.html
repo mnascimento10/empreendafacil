@@ -765,12 +765,14 @@ async function carregarImpacto() {
 
 function renderImpacto(data) {
   if (!data || data.length === 0) {
-    document.getElementById('impacto-grid').innerHTML = '<p>Nenhum dado disponível</p>';
+    const grid = document.getElementById('impacto-grid');
+    if (grid) grid.innerHTML = '<p>Nenhum dado disponível</p>';
     return;
   }
   const grid = document.getElementById('impacto-grid');
+  if (!grid) return; // Proteção caso o elemento HTML ainda não exista na árvore
+
   const total = data.reduce((acc, d) => acc + (d.cliques_exibidos || 0), 0);
-  
   grid.innerHTML = `
     <div class="impacto-card impacto-total">
       <span class="impacto-num">${total}</span>
@@ -785,15 +787,17 @@ function renderImpacto(data) {
   `;
 }
 
-        // Ativação limpa do canal em tempo real externa (roda para todos os visitantes)
+// Ativação limpa do canal em tempo real externa (roda para todos os visitantes)
 sb.channel('downloads-realtime')
   .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'downloads' }, () => {
     carregarImpacto();
   })
   .subscribe();
 
-// Forçar a execução inicial imediatamente ao carregar o script (fora de checagem de login)
-carregarImpacto();
+// Garante que a busca inicial aconteça de forma segura após o HTML ser desenhado
+document.addEventListener('DOMContentLoaded', () => {
+  carregarImpacto();
+});
 
 
 // ===== CARREGAR RELATOS =====
