@@ -16,9 +16,9 @@ const perfis = {
                 titulo: "Apareça para novos clientes",
                 desc: "Se as pessoas não encontram seu negócio, você perde oportunidades todos os dias. O primeiro passo é se tornar visível na internet.",
                 materiais: [
-                    { icon: "📍", nome: "Como aparecer no Google Maps", sub: "Tutorial Google Meu Negócio", link: "pdf/Tutorial_GoogleMeuNegocio.pdf" },
-                    { icon: "📸", nome: "Criar Instagram profissional", sub: "Passo a passo completo", link: "pdf/Tutorial_Instragram.pdf" },
-                    { icon: "🎨", nome: "Criar artes no Canva", sub: "Com inteligência artificial", link: "pdf/Tutorial_IAdoCanva.pdf" }
+                    { icon: "📍", nome: "Como aparecer no Google Maps", sub: "Tutorial Google Meu Negócio", link: "pdf/Tutorial_GoogleMeuNegocio.pdf", id_banco: "pdf_googlemaps" },
+                    { icon: "📸", nome: "Criar Instagram profissional", sub: "Passo a passo completo", link: "pdf/Tutorial_Instragram.pdf", id_banco: "pdf_instagram" },
+                    { icon: "🎨", nome: "Criar artes no Canva", sub: "Com inteligência artificial", link: "pdf/Tutorial_IAdoCanva.pdf", id_banco: "pdf_canva" }
                 ],
                 dicas: {
                     titulo: "Dicas rápidas de divulgação",
@@ -35,7 +35,7 @@ const perfis = {
                 titulo: "Atenda melhor e aumente suas vendas",
                 desc: "Muitos clientes são perdidos não pela qualidade do serviço, mas pelo atendimento. Responder rápido e de forma organizada faz toda diferença.",
                 materiais: [
-                    { icon: "💬", nome: "Configurar WhatsApp Business", sub: "Atendimento profissional", link: "pdf/Tutorial_WhatsappBusiness.pdf" }
+                    { icon: "💬", nome: "Configurar WhatsApp Business", sub: "Atendimento profissional", link: "pdf/Tutorial_WhatsappBusiness.pdf" ,id_banco: "pdf_whatsapp" }
                 ],
                 dicas: {
                     titulo: "Como fidelizar clientes",
@@ -55,7 +55,7 @@ const perfis = {
                 planilha: {
                     nome: "Planilha de controle financeiro",
                     sub: "Fluxo de caixa — Google Sheets gratuito",
-                    link: "https://docs.google.com/spreadsheets/d/1nJgnQxeG4onwF_qRXNc0iPcShPBTy0B0LkhIp5mUND8/copy"
+                    link: "https://docs.google.com/spreadsheets/d/1nJgnQxeG4onwF_qRXNc0iPcShPBTy0B0LkhIp5mUND8/copy" ,id_banco
                 },
                 dicas: {
                     titulo: "Boas práticas financeiras",
@@ -79,8 +79,8 @@ const perfis = {
                 titulo: "Apareça para novos clientes",
                 desc: "Se o cliente não encontra você, ele contrata outro. Estar visível é essencial para crescer.",
                 materiais: [
-                    { icon: "📍", nome: "Como aparecer no Google", sub: "Tutorial Google Meu Negócio", link: "pdf/Tutorial_GoogleMeuNegocio.pdf" },
-                    { icon: "🎨", nome: "Cartão digital e artes no Canva", sub: "Com inteligência artificial", link: "pdf/Tutorial_IAdoCanva.pdf" }
+                    { icon: "📍", nome: "Como aparecer no Google", sub: "Tutorial Google Meu Negócio", link: "pdf/Tutorial_GoogleMeuNegocio.pdf", id_banco: "pdf_google" },
+                    { icon: "🎨", nome: "Cartão digital e artes no Canva", sub: "Com inteligência artificial", link: "pdf/Tutorial_IAdoCanva.pdf", id_banco: "pdf_canva" }
                 ]
             },
             {
@@ -88,7 +88,7 @@ const perfis = {
                 titulo: "Atenda com mais profissionalismo",
                 desc: "Um atendimento bem estruturado aumenta muito sua taxa de conversão e passa mais confiança para o cliente.",
                 materiais: [
-                    { icon: "💬", nome: "Configurar WhatsApp Business", sub: "Atendimento profissional", link: "pdf/Tutorial_WhatsappBusiness.pdf" }
+                    { icon: "💬", nome: "Configurar WhatsApp Business", sub: "Atendimento profissional", link: "pdf/Tutorial_WhatsappBusiness.pdf", id_banco: "pdf_whatsapp" }
                 ],
                 dicas: {
                     titulo: "Como pedir avaliações",
@@ -104,7 +104,7 @@ const perfis = {
                 titulo: "Organize seus atendimentos",
                 desc: "Organização evita atrasos, esquecimentos e melhora sua imagem profissional.",
                 materiais: [
-                    { icon: "📅", nome: "Organizar com Google Agenda", sub: "Gestão de horários", link: "pdf/Tutorial_GoogleAgenda.pdf" }
+                    { icon: "📅", nome: "Organizar com Google Agenda", sub: "Gestão de horários", link: "pdf/Tutorial_GoogleAgenda.pdf", id_banco: "pdf_googleagenda" }
                 ]
             },
             {
@@ -114,7 +114,8 @@ const perfis = {
                 planilha: {
                     nome: "Planilha de fluxo de caixa",
                     sub: "Controle financeiro — Google Sheets gratuito",
-                    link: "https://docs.google.com/spreadsheets/d/1nJgnQxeG4onwF_qRXNc0iPcShPBTy0B0LkhIp5mUND8/copy"
+                    link: "https://docs.google.com/spreadsheets/d/1nJgnQxeG4onwF_qRXNc0iPcShPBTy0B0LkhIp5mUND8/copy", id_banco: "pdf_fluxodecaixa"
+
                 }
             },
             {
@@ -160,7 +161,7 @@ const perfis = {
                 planilha: {
                     nome: "Planilha de controle diário",
                     sub: "Ganhos, combustível e lucro real — Google Sheets",
-                    link: "https://docs.google.com/spreadsheets/d/1qP-9rMoj8apNPkCN7F895Oo0NuSd-l9hkDuqrdz8gvk/copy"
+                    link: "https://docs.google.com/spreadsheets/d/1qP-9rMoj8apNPkCN7F895Oo0NuSd-l9hkDuqrdz8gvk/copy", id_banco: "pdf_controle_diario"
                 },
                 dicas: {
                     titulo: "O que a planilha te ajuda a fazer",
@@ -191,8 +192,8 @@ const perfis = {
                 titulo: "Gere renda extra fora do aplicativo",
                 desc: "Além dos apps, você pode conseguir clientes próprios para fretes, entregas ou corridas particulares.",
                 materiais: [
-                    { icon: "💬", nome: "Usar WhatsApp Business", sub: "Atendimento profissional", link: "pdf/Tutorial_WhatsappBusiness.pdf" },
-                    { icon: "🎨", nome: "Criar cartões e divulgação no Canva", sub: "Com inteligência artificial", link: "pdf/Tutorial_IAdoCanva.pdf" }
+                    { icon: "💬", nome: "Usar WhatsApp Business", sub: "Atendimento profissional", link: "pdf/Tutorial_WhatsappBusiness.pdf", id_banco: "pdf_whatsapp" },
+                    { icon: "🎨", nome: "Criar cartões e divulgação no Canva", sub: "Com inteligência artificial", link: "pdf/Tutorial_IAdoCanva.pdf", id_banco: "pdf_canva" }
                 ],
                 dicas: {
                     titulo: "Como captar clientes diretos",
@@ -216,9 +217,9 @@ const perfis = {
                 titulo: "Divulgue seu trabalho corretamente",
                 desc: "Clientes precisam ver seu trabalho para confiar e agendar. Uma boa apresentação vale mais que qualquer propaganda.",
                 materiais: [
-                    { icon: "📸", nome: "Criar Instagram profissional", sub: "Passo a passo completo", link: "pdf/Tutorial_Instragram.pdf" },
-                    { icon: "💬", nome: "Configurar WhatsApp Business", sub: "Com catálogo de serviços", link: "pdf/Tutorial_WhatsappBusiness.pdf" },
-                    { icon: "🎨", nome: "Criar artes no Canva", sub: "Com inteligência artificial", link: "pdf/Tutorial_IAdoCanva.pdf" }
+                    { icon: "📸", nome: "Criar Instagram profissional", sub: "Passo a passo completo", link: "pdf/Tutorial_Instragram.pdf", id_banco: "pdf_instagram" },
+                    { icon: "💬", nome: "Configurar WhatsApp Business", sub: "Com catálogo de serviços", link: "pdf/Tutorial_WhatsappBusiness.pdf", id_banco: "pdf_whatsapp" },
+                    { icon: "🎨", nome: "Criar artes no Canva", sub: "Com inteligência artificial", link: "pdf/Tutorial_IAdoCanva.pdf", id_banco: "pdf_canva" }
                 ],
                 dicas: {
                     titulo: "Dicas de postagem e fotos",
@@ -236,7 +237,7 @@ const perfis = {
                 titulo: "Organize sua agenda e atendimentos",
                 desc: "Uma agenda organizada evita atrasos e melhora a experiência do cliente.",
                 materiais: [
-                    { icon: "📅", nome: "Organizar com Google Agenda", sub: "Gestão de horários", link: "pdf/Tutorial_GoogleAgenda.pdf" }
+                    { icon: "📅", nome: "Organizar com Google Agenda", sub: "Gestão de horários", link: "pdf/Tutorial_GoogleAgenda.pdf", id_banco: "pdf_googleagenda" }
                 ],
                 dicas: {
                     titulo: "Boas práticas de agendamento",
@@ -252,7 +253,7 @@ const perfis = {
                 titulo: "Fidelize seus clientes",
                 desc: "Clientes satisfeitos voltam e indicam seu trabalho. A fidelização é o caminho mais barato para crescer.",
                 materiais: [
-                    { icon: "📍", nome: "Aparecer e receber avaliações no Google", sub: "Tutorial Google Meu Negócio", link: "pdf/Tutorial_GoogleMeuNegocio.pdf" }
+                    { icon: "📍", nome: "Aparecer e receber avaliações no Google", sub: "Tutorial Google Meu Negócio", link: "pdf/Tutorial_GoogleMeuNegocio.pdf", id_banco: "pdf_googlemeunegocio" }
                 ],
                 dicas: {
                     titulo: "Como fidelizar",
@@ -277,7 +278,7 @@ const perfis = {
                 titulo: "Divulgue seus produtos",
                 desc: "A forma como você apresenta seus produtos influencia diretamente nas vendas.",
                 materiais: [
-                    { icon: "📸", nome: "Criar Instagram profissional", sub: "Passo a passo completo", link: "pdf/Tutorial_Instragram.pdf" }
+                    { icon: "📸", nome: "Criar Instagram profissional", sub: "Passo a passo completo", link: "pdf/Tutorial_Instragram.pdf", id_banco: "pdf_instagram" }
                 ],
                 dicas: {
                     titulo: "Dicas de postagem",
@@ -294,7 +295,7 @@ const perfis = {
                 titulo: "Crie imagens e catálogos profissionais",
                 desc: "Uma boa apresentação aumenta o valor percebido do seu produto e justifica preços maiores.",
                 materiais: [
-                    { icon: "🎨", nome: "Criar artes e catálogos no Canva", sub: "Com inteligência artificial", link: "pdf/Tutorial_IAdoCanva.pdf" }
+                    { icon: "🎨", nome: "Criar artes e catálogos no Canva", sub: "Com inteligência artificial", link: "pdf/Tutorial_IAdoCanva.pdf", id_banco: "pdf_canva" }
                 ]
             },
             {
@@ -302,7 +303,7 @@ const perfis = {
                 titulo: "Venda e atenda pelos canais certos",
                 desc: "Você pode vender tanto diretamente pelo WhatsApp quanto por plataformas online.",
                 materiais: [
-                    { icon: "💬", nome: "Usar WhatsApp Business", sub: "Com catálogo e pós-venda", link: "pdf/Tutorial_WhatsappBusiness.pdf" }
+                    { icon: "💬", nome: "Usar WhatsApp Business", sub: "Com catálogo e pós-venda", link: "pdf/Tutorial_WhatsappBusiness.pdf", id_banco: "pdf_whatsapp" }
                 ],
                 dicas: {
                     titulo: "Dicas de vendas",
@@ -320,7 +321,7 @@ const perfis = {
                 planilha: {
                     nome: "Planilha de controle de pedidos e lucro",
                     sub: "Precificação e gestão — Google Sheets gratuito",
-                    link: "https://docs.google.com/spreadsheets/d/1N4QzJ7iQ-Azb9AIPGLGcvHXJEYskXQLTmQb1jGxqyRw/copy"
+                    link: "https://docs.google.com/spreadsheets/d/1N4QzJ7iQ-Azb9AIPGLGcvHXJEYskXQLTmQb1jGxqyRw/copy", id_banco: "pdf_planilha"
                 },
                 dicas: {
                     titulo: "O que a planilha te ajuda a fazer",
