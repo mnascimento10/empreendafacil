@@ -428,6 +428,12 @@ function obterIdBancoPorLink(link) {
   if (link.includes('Tutorial_IAdoCanva.pdf')) return 'pdf_canva';
   if (link.includes('Tutorial_WhatsappBusiness.pdf')) return 'pdf_whatsapp';
   if (link.includes('Tutorial_GoogleAgenda.pdf')) return 'pdf_agenda';
+  
+  // Identificação exata pelos códigos únicos do Google Sheets
+  if (link.includes('1nJgnQxeG4onwF_qRXNc0iPcShPBTy0B0LkhIp5mUND8')) return 'planilha_fluxo';
+  if (link.includes('1qP-9rMoj8apNPkCN7F895Oo0NuSd-l9hkDuqrdz8gvk')) return 'planilha_motorista';
+  if (link.includes('1N4QzJ7iQ-Azb9AIPGLGcvHXJEYskXQLTmQb1jGxqyRw')) return 'planilha_produtor';
+  
   if (link.includes('spreadsheets') || link.includes('fluxo')) return 'planilha_fluxo';
   if (link.includes('produtor')) return 'planilha_produtor';
   if (link.includes('motorista')) return 'planilha_motorista';
@@ -438,9 +444,7 @@ function obterIdBancoPorLink(link) {
 async function registrarCliqueAutomatico(event, link) {
   // Impede o navegador de abrir o arquivo antes de avisar o Supabase
   event.preventDefault();
-  
   const idBanco = obterIdBancoPorLink(link);
-  
   if (idBanco) {
     try {
       console.log(`Registrando clique no banco para: ${idBanco}`);
@@ -451,7 +455,6 @@ async function registrarCliqueAutomatico(event, link) {
       console.error("Erro ao registrar clique:", err.message);
     }
   }
-
   // Após salvar ou em caso de erro, abre o arquivo em uma nova aba normalmente
   window.open(link, '_blank');
 }
@@ -461,14 +464,11 @@ document.addEventListener('click', (event) => {
   // Procura se o usuário clicou em um link <a> que aponta para um PDF ou Planilha
   const linkElement = event.target.closest('a');
   if (!linkElement) return;
-
   const url = linkElement.getAttribute('href') || '';
-  
   // Se o link contiver "pdf/" ou "://google.com", intercepta o clique
   if (url.includes('pdf/') || url.includes('spreadsheets')) {
     // Evita duplicar se já for o botão do Ebook que já tem o onclick fixo no HTML
     if (url.includes('EmpreendaFacil_Ebook.pdf')) return;
-
     registrarCliqueAutomatico(event, url);
   }
 });
