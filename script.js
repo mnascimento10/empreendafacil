@@ -1,951 +1,417 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Empreenda Fácil</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <!-- Supabase SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
-<body>
+// ===== NAVEGAÇÃO =====
+function scrollParaPerfis() {
+    document.getElementById("perfis").scrollIntoView({ behavior: "smooth" });
+}
 
-<!-- ===== NAVEGAÇÃO ===== -->
-<nav>
-    <span class="nav-logo">Empreenda<span>Fácil</span></span>
-    <div class="nav-direita">
-        <button class="nav-sobre" onclick="abrirSobre()">Sobre o Projeto</button>
-        <div id="nav-usuario" class="nav-usuario-area">
-            <button class="nav-login-btn" onclick="abrirLogin()">Entrar</button>
-        </div>
-    </div>
-</nav>
+// ===== DADOS DOS PERFIS =====
+const perfis = {
 
-<!-- ===== MODAL SOBRE O PROJETO ===== -->
-<div id="modal-sobre" class="modal-overlay" onclick="fecharSobre(event)">
-    <div class="modal-box">
-        <button class="modal-fechar" onclick="fecharSobreBtn()">✕</button>
-        <div class="modal-sobre-header">
-            <span class="modal-sobre-emoji">🌱</span>
-            <h3>Sobre o Empreenda Fácil</h3>
-        </div>
-        <p class="modal-sobre-texto">
-            Este projeto nasceu de uma constatação simples: muitos profissionais talentosos em Araraquara e região perdem clientes todos os dias — não por falta de qualidade, mas por falta de visibilidade e organização digital.
-        </p>
-        <p class="modal-sobre-texto">
-            O <strong>Empreenda Fácil</strong> foi criado para mudar isso. É uma plataforma gratuita com tutoriais, planilhas e um guia completo para que microempreendedores e autônomos possam dar seus primeiros passos no mundo digital com confiança e sem complicação.
-        </p>
-        <div class="modal-sobre-divider"></div>
-        <p class="modal-sobre-academico">
-            📚 Este é um <strong>projeto de extensão acadêmica</strong> do curso de Análise e Desenvolvimento de Sistemas, desenvolvido para gerar impacto real na comunidade de Araraquara, SP.
-        </p>
-        <div class="modal-sobre-autor">
-            <span>👨‍💻</span>
-            <div>
-                <strong>Miguel Augusto de Pauli Nascimento</strong>
-                <span>Análise e Desenvolvimento de Sistemas · Araraquara, SP</span>
+    // ----------------------------------------------------------------
+    mei: {
+        titulo: "MEI — Organize e profissionalize seu negócio",
+        descricao: "Se você é MEI, o maior desafio normalmente não é falta de trabalho — é não ter organização e presença digital. Aqui você encontra ferramentas simples para aparecer para novos clientes, atender melhor e controlar seu dinheiro.",
+        secoes: [
+            {
+                num: "1",
+                titulo: "Apareça para novos clientes",
+                desc: "Se as pessoas não encontram seu negócio, você perde oportunidades todos os dias. O primeiro passo é se tornar visível na internet.",
+                materiais: [
+                    { icon: "📍", nome: "Como aparecer no Google Maps", sub: "Tutorial Google Meu Negócio", link: "pdf/Tutorial_GoogleMeuNegocio.pdf"},
+                    { icon: "📸", nome: "Criar Instagram profissional", sub: "Passo a passo completo", link: "pdf/Tutorial_Instragram.pdf"},
+                    { icon: "🎨", nome: "Criar artes no Canva", sub: "Com inteligência artificial", link: "pdf/Tutorial_IAdoCanva.pdf"}
+                ],
+                dicas: {
+                    titulo: "Dicas rápidas de divulgação",
+                    items: [
+                        "Poste fotos reais do seu trabalho",
+                        "Mostre antes e depois (se aplicável)",
+                        "Use depoimentos de clientes",
+                        "Poste com frequência — 2 a 3 vezes por semana"
+                    ]
+                }
+            },
+            {
+                num: "2",
+                titulo: "Atenda melhor e aumente suas vendas",
+                desc: "Muitos clientes são perdidos não pela qualidade do serviço, mas pelo atendimento. Responder rápido e de forma organizada faz toda diferença.",
+                materiais: [
+                    { icon: "💬", nome: "Configurar WhatsApp Business", sub: "Atendimento profissional", link: "pdf/Tutorial_WhatsappBusiness.pdf"}
+                ],
+                dicas: {
+                    titulo: "Como fidelizar clientes",
+                    items: [
+                        "Responda rápido",
+                        "Chame o cliente pelo nome",
+                        "Mantenha um padrão de atendimento",
+                        "Peça avaliação após o serviço",
+                        "Ofereça retorno ou acompanhamento"
+                    ]
+                }
+            },
+            {
+                num: "3",
+                titulo: "Controle seu negócio",
+                desc: "Sem controle financeiro, você pode trabalhar muito e não ter lucro. Anote entradas e saídas, separe dinheiro pessoal do negócio e revise toda semana.",
+                planilha: {
+                    nome: "Planilha de controle financeiro",
+                    sub: "Fluxo de caixa — Google Sheets gratuito",
+                    link: "https://docs.google.com/spreadsheets/d/1nJgnQxeG4onwF_qRXNc0iPcShPBTy0B0LkhIp5mUND8/copy"
+                },
+                dicas: {
+                    titulo: "Boas práticas financeiras",
+                    items: [
+                        "Separe o dinheiro pessoal do negócio",
+                        "Anote todas as entradas e saídas",
+                        "Revise semanalmente"
+                    ]
+                }
+            }
+        ]
+    },
+
+    // ----------------------------------------------------------------
+    autonomo: {
+        titulo: "Autônomo — Fortaleça sua imagem profissional",
+        descricao: "Como autônomo, sua renda depende diretamente da sua organização e da forma como você se apresenta. Pequenos ajustes já fazem grande diferença na quantidade de clientes e no valor que você consegue cobrar.",
+        secoes: [
+            {
+                num: "1",
+                titulo: "Apareça para novos clientes",
+                desc: "Se o cliente não encontra você, ele contrata outro. Estar visível é essencial para crescer.",
+                materiais: [
+                    { icon: "📍", nome: "Como aparecer no Google", sub: "Tutorial Google Meu Negócio", link: "pdf/Tutorial_GoogleMeuNegocio.pdf"},
+                    { icon: "🎨", nome: "Cartão digital e artes no Canva", sub: "Com inteligência artificial", link: "pdf/Tutorial_IAdoCanva.pdf"}
+                ]
+            },
+            {
+                num: "2",
+                titulo: "Atenda com mais profissionalismo",
+                desc: "Um atendimento bem estruturado aumenta muito sua taxa de conversão e passa mais confiança para o cliente.",
+                materiais: [
+                    { icon: "💬", nome: "Configurar WhatsApp Business", sub: "Atendimento profissional", link: "pdf/Tutorial_WhatsappBusiness.pdf"}
+                ],
+                dicas: {
+                    titulo: "Como pedir avaliações",
+                    items: [
+                        "Peça após finalizar o serviço",
+                        "Envie link direto para avaliação",
+                        "Use depoimentos como prova social"
+                    ]
+                }
+            },
+            {
+                num: "3",
+                titulo: "Organize seus atendimentos",
+                desc: "Organização evita atrasos, esquecimentos e melhora sua imagem profissional.",
+                materiais: [
+                    { icon: "📅", nome: "Organizar com Google Agenda", sub: "Gestão de horários", link: "pdf/Tutorial_GoogleAgenda.pdf"}
+                ]
+            },
+            {
+                num: "4",
+                titulo: "Controle seu dinheiro",
+                desc: "Sem controle financeiro, você não sabe se está crescendo ou apenas trabalhando mais.",
+                planilha: {
+                    nome: "Planilha de fluxo de caixa",
+                    sub: "Controle financeiro — Google Sheets gratuito",
+                    link: "https://docs.google.com/spreadsheets/d/1nJgnQxeG4onwF_qRXNc0iPcShPBTy0B0LkhIp5mUND8/copy"
+
+                }
+            },
+            {
+                num: "5",
+                titulo: "Aumente sua credibilidade",
+                desc: "A confiança do cliente é o que permite cobrar melhor e ter mais indicações.",
+                dicas: {
+                    titulo: "Como construir credibilidade",
+                    items: [
+                        "Use fotos reais e de boa qualidade do seu trabalho",
+                        "Mantenha um padrão visual (cores, estilo, comunicação)",
+                        "Seja pontual nos atendimentos",
+                        "Tenha canais de contato organizados",
+                        "Mostre avaliações de clientes"
+                    ]
+                }
+            }
+        ]
+    },
+
+    // ----------------------------------------------------------------
+    motorista: {
+        titulo: "Motorista de App — Ganhe mais e controle seu dinheiro",
+        descricao: "Trabalhar com aplicativos exige estratégia. Não basta rodar mais — é preciso saber quando, onde e como trabalhar para realmente ter lucro.",
+        secoes: [
+            {
+                num: "1",
+                titulo: "Aumente seus ganhos",
+                desc: "Trabalhar nos horários e locais certos faz toda diferença no faturamento diário.",
+                dicas: {
+                    titulo: "Estratégias para ganhar mais",
+                    items: [
+                        "Prefira horários de alta demanda",
+                        "Evite períodos muito parados",
+                        "Conheça regiões com maior movimento"
+                    ]
+                }
+            },
+            {
+                num: "2",
+                titulo: "Controle seus ganhos e despesas",
+                desc: "Sem controle, você pode rodar o dia inteiro e não ter lucro real após descontar combustível e manutenção.",
+                planilha: {
+                    nome: "Planilha de controle diário",
+                    sub: "Ganhos, combustível e lucro real — Google Sheets",
+                    link: "https://docs.google.com/spreadsheets/d/1qP-9rMoj8apNPkCN7F895Oo0NuSd-l9hkDuqrdz8gvk/copy"
+                },
+                dicas: {
+                    titulo: "O que a planilha te ajuda a fazer",
+                    items: [
+                        "Registrar ganhos do dia",
+                        "Controlar combustível e manutenção",
+                        "Calcular lucro real",
+                        "Planejar reserva financeira"
+                    ]
+                }
+            },
+            {
+                num: "3",
+                titulo: "Mantenha uma boa reputação",
+                desc: "Sua avaliação impacta diretamente na quantidade de chamadas que você recebe.",
+                dicas: {
+                    titulo: "Dicas de atendimento",
+                    items: [
+                        "Seja educado e cordial",
+                        "Mantenha o veículo limpo",
+                        "Evite cancelamentos desnecessários",
+                        "Cumpra horários e rotas corretamente"
+                    ]
+                }
+            },
+            {
+                num: "4",
+                titulo: "Gere renda extra fora do aplicativo",
+                desc: "Além dos apps, você pode conseguir clientes próprios para fretes, entregas ou corridas particulares.",
+                materiais: [
+                    { icon: "💬", nome: "Usar WhatsApp Business", sub: "Atendimento profissional", link: "pdf/Tutorial_WhatsappBusiness.pdf"},
+                    { icon: "🎨", nome: "Criar cartões e divulgação no Canva", sub: "Com inteligência artificial", link: "pdf/Tutorial_IAdoCanva.pdf"}
+                ],
+                dicas: {
+                    titulo: "Como captar clientes diretos",
+                    items: [
+                        "Divulgue seu contato para clientes recorrentes",
+                        "Crie um cartão digital simples",
+                        "Ofereça serviços como entregas ou viagens agendadas"
+                    ]
+                }
+            }
+        ]
+    },
+
+    // ----------------------------------------------------------------
+    beleza: {
+        titulo: "Profissional de Beleza — Atraia clientes e fidelize",
+        descricao: "Na área da beleza, a imagem e a organização fazem toda a diferença. Clientes escolhem quem transmite confiança, mostra resultados e oferece um bom atendimento.",
+        secoes: [
+            {
+                num: "1",
+                titulo: "Divulgue seu trabalho corretamente",
+                desc: "Clientes precisam ver seu trabalho para confiar e agendar. Uma boa apresentação vale mais que qualquer propaganda.",
+                materiais: [
+                    { icon: "📸", nome: "Criar Instagram profissional", sub: "Passo a passo completo", link: "pdf/Tutorial_Instragram.pdf"},
+                    { icon: "💬", nome: "Configurar WhatsApp Business", sub: "Com catálogo de serviços", link: "pdf/Tutorial_WhatsappBusiness.pdf"},
+                    { icon: "🎨", nome: "Criar artes no Canva", sub: "Com inteligência artificial", link: "pdf/Tutorial_IAdoCanva.pdf"}
+                ],
+                dicas: {
+                    titulo: "Dicas de postagem e fotos",
+                    items: [
+                        "Mostre antes e depois (quando possível)",
+                        "Publique fotos reais dos seus atendimentos",
+                        "Use boa iluminação — luz natural de preferência",
+                        "Mantenha fundo limpo e organizado",
+                        "Poste 2 a 3 vezes por semana"
+                    ]
+                }
+            },
+            {
+                num: "2",
+                titulo: "Organize sua agenda e atendimentos",
+                desc: "Uma agenda organizada evita atrasos e melhora a experiência do cliente.",
+                materiais: [
+                    { icon: "📅", nome: "Organizar com Google Agenda", sub: "Gestão de horários", link: "pdf/Tutorial_GoogleAgenda.pdf"}
+                ],
+                dicas: {
+                    titulo: "Boas práticas de agendamento",
+                    items: [
+                        "Confirme horários com antecedência",
+                        "Evite atrasos",
+                        "Mantenha registro dos clientes"
+                    ]
+                }
+            },
+            {
+                num: "3",
+                titulo: "Fidelize seus clientes",
+                desc: "Clientes satisfeitos voltam e indicam seu trabalho. A fidelização é o caminho mais barato para crescer.",
+                materiais: [
+                    { icon: "📍", nome: "Aparecer e receber avaliações no Google", sub: "Tutorial Google Meu Negócio", link: "pdf/Tutorial_GoogleMeuNegocio.pdf"}
+                ],
+                dicas: {
+                    titulo: "Como fidelizar",
+                    items: [
+                        "Peça avaliação após o atendimento",
+                        "Envie o link do Google para facilitar",
+                        "Mantenha contato com clientes antigos",
+                        "Ofereça retorno (ex: manutenção do serviço)"
+                    ]
+                }
+            }
+        ]
+    },
+
+    // ----------------------------------------------------------------
+    produtor: {
+        titulo: "Produtor Manual — Venda mais e organize sua produção",
+        descricao: "Quem trabalha com produtos manuais precisa não só produzir bem, mas também saber divulgar, organizar pedidos e calcular corretamente o preço para ter lucro de verdade.",
+        secoes: [
+            {
+                num: "1",
+                titulo: "Divulgue seus produtos",
+                desc: "A forma como você apresenta seus produtos influencia diretamente nas vendas.",
+                materiais: [
+                    { icon: "📸", nome: "Criar Instagram profissional", sub: "Passo a passo completo", link: "pdf/Tutorial_Instragram.pdf"}
+                ],
+                dicas: {
+                    titulo: "Dicas de postagem",
+                    items: [
+                        "Mostre o produto final com boa iluminação",
+                        "Mostre detalhes do acabamento",
+                        "Mostre o processo de produção",
+                        "Use fotos reais — evite imagens genéricas"
+                    ]
+                }
+            },
+            {
+                num: "2",
+                titulo: "Crie imagens e catálogos profissionais",
+                desc: "Uma boa apresentação aumenta o valor percebido do seu produto e justifica preços maiores.",
+                materiais: [
+                    { icon: "🎨", nome: "Criar artes e catálogos no Canva", sub: "Com inteligência artificial", link: "pdf/Tutorial_IAdoCanva.pdf"}
+                ]
+            },
+            {
+                num: "3",
+                titulo: "Venda e atenda pelos canais certos",
+                desc: "Você pode vender tanto diretamente pelo WhatsApp quanto por plataformas online.",
+                materiais: [
+                    { icon: "💬", nome: "Usar WhatsApp Business", sub: "Com catálogo e pós-venda", link: "pdf/Tutorial_WhatsappBusiness.pdf"}
+                ],
+                dicas: {
+                    titulo: "Dicas de vendas",
+                    items: [
+                        "Use WhatsApp para atendimento rápido",
+                        "Organize pedidos por cliente",
+                        "Considere vender em marketplaces ou redes sociais"
+                    ]
+                }
+            },
+            {
+                num: "4",
+                titulo: "Organize pedidos e calcule seu lucro",
+                desc: "Sem controle, você pode vender bastante e ainda assim não ter lucro real.",
+                planilha: {
+                    nome: "Planilha de controle de pedidos e lucro",
+                    sub: "Precificação e gestão — Google Sheets gratuito",
+                    link: "https://docs.google.com/spreadsheets/d/1N4QzJ7iQ-Azb9AIPGLGcvHXJEYskXQLTmQb1jGxqyRw/copy"
+                },
+                dicas: {
+                    titulo: "O que a planilha te ajuda a fazer",
+                    items: [
+                        "Calcular o preço correto do produto",
+                        "Controlar pedidos em andamento",
+                        "Organizar custos e lucros"
+                    ]
+                }
+            },
+            {
+                num: "5",
+                titulo: "Pós-venda e fidelização",
+                desc: "Um bom pós-venda aumenta muito a chance do cliente comprar novamente.",
+                dicas: {
+                    titulo: "Como fazer pós-venda",
+                    items: [
+                        "Envie mensagem após a entrega",
+                        "Peça feedback do produto",
+                        "Ofereça novos produtos ou novidades"
+                    ]
+                }
+            }
+        ]
+    }
+};
+
+// ===== RENDERIZAÇÃO DO PERFIL =====
+function selecionarPerfil(key, btnEl) {
+
+    // Atualiza botão ativo
+    document.querySelectorAll('.perfil-btn').forEach(b => b.classList.remove('active'));
+    if (btnEl) btnEl.classList.add('active');
+
+    const dados = perfis[key];
+    if (!dados) return;
+
+    let html = `<div class="perfil-conteudo">
+        <h2>${dados.titulo}</h2>
+        <p>${dados.descricao}</p>`;
+
+    dados.secoes.forEach(sec => {
+        html += `<div class="perfil-section">
+            <div class="perfil-section-header">
+                <div class="perfil-section-num">${sec.num}</div>
+                <h3>${sec.titulo}</h3>
             </div>
-        </div>
-    </div>
-</div>
+            <p>${sec.desc}</p>`;
 
-<!-- ===== MODAL LOGIN ===== -->
-<div id="modal-login" class="modal-overlay" onclick="fecharLogin(event)">
-    <div class="modal-box modal-login-box">
-        <button class="modal-fechar" onclick="fecharLoginBtn()">✕</button>
-        <h3 class="modal-login-titulo">Entrar no Empreenda Fácil</h3>
-        <p class="modal-login-sub">Entre para deixar seu relato e acompanhar os materiais.</p>
-        <button class="btn-google-login" onclick="loginGoogle()">
-            <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-                <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
-                <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
-                <path d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z" fill="#FBBC05"/>
-                <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z" fill="#EA4335"/>
-            </svg>
-            Continuar com Google
-        </button>
-        <div class="modal-login-divider"><span>ou entre com e-mail</span></div>
-        <input type="email" id="login-email" class="modal-input" placeholder="Seu e-mail">
-        <input type="password" id="login-senha" class="modal-input" placeholder="Sua senha">
-        <button class="btn-primary modal-btn-entrar" onclick="loginEmail()">Entrar</button>
-        <p class="modal-login-cadastro">Não tem conta? <a href="#" onclick="abrirCadastro()">Criar conta</a></p>
-        <p id="login-erro" class="modal-login-erro"></p>
-    </div>
-</div>
-
-<!-- ===== MODAL CADASTRO ===== -->
-<div id="modal-cadastro" class="modal-overlay" onclick="fecharCadastro(event)">
-    <div class="modal-box modal-login-box">
-        <button class="modal-fechar" onclick="fecharCadastroBtn()">✕</button>
-        <h3 class="modal-login-titulo">Criar sua conta</h3>
-        <p class="modal-login-sub">Preencha os dados abaixo para se cadastrar.</p>
-        <input type="text"     id="cad-nome"  class="modal-input" placeholder="Seu nome de usuário">
-        <input type="email"    id="cad-email" class="modal-input" placeholder="Seu e-mail">
-        <input type="password" id="cad-senha" class="modal-input" placeholder="Crie uma senha">
-        <button class="btn-primary modal-btn-entrar" onclick="criarConta()">Criar conta</button>
-        <p class="modal-login-cadastro">Já tem conta? <a href="#" onclick="voltarLogin()">Entrar</a></p>
-        <p id="cad-erro" class="modal-login-erro"></p>
-    </div>
-</div>
-
-<!-- ===== MODAL PERFIL ===== -->
-<div id="modal-perfil" class="modal-overlay" onclick="fecharPerfil(event)">
-    <div class="modal-box modal-login-box">
-        <button class="modal-fechar" onclick="fecharPerfilBtn()">✕</button>
-        <h3 class="modal-login-titulo">Meu Perfil</h3>
-
-        <div class="perfil-avatar-wrap">
-            <div id="perfil-avatar-preview" class="perfil-avatar-circulo">?</div>
-            <div class="perfil-avatar-acoes">
-                <label class="perfil-avatar-label" for="perfil-avatar-input">
-                    📷 Alterar foto
-                </label>
-                <input type="file" id="perfil-avatar-input" accept="image/*"
-                       style="display:none" onchange="previewAvatar(event)">
-                <span class="perfil-avatar-dica">JPG ou PNG · máx. 2MB</span>
-            </div>
-        </div>
-
-        <label class="modal-estrelas-label">Nome de usuário</label>
-        <input type="text" id="perfil-nome" class="modal-input" placeholder="Seu nome">
-        <label class="modal-estrelas-label">E-mail</label>
-        <input type="email" id="perfil-email" class="modal-input" placeholder="Seu e-mail" disabled>
-        <div id="perfil-senha-section"></div>
-
-        <button class="btn-primary modal-btn-entrar" onclick="salvarPerfil()">Salvar alterações</button>
-
-        <div class="perfil-acoes-extra">
-            <button class="btn-perfil-sair" onclick="logout()">Sair da conta</button>
-            <button class="btn-perfil-deletar" onclick="abrirDeletarConta()">Deletar conta</button>
-        </div>
-        <p id="perfil-msg" class="modal-login-erro"></p>
-    </div>
-</div>
-
-<!-- ===== MODAL DELETAR CONTA ===== -->
-<div id="modal-deletar" class="modal-overlay" onclick="fecharDeletar(event)">
-    <div class="modal-box modal-login-box">
-        <button class="modal-fechar" onclick="fecharDeletarBtn()">✕</button>
-        <h3 class="modal-login-titulo" style="color:#C0392B">⚠️ Deletar conta</h3>
-        <p class="modal-login-sub">Esta ação é permanente e não pode ser desfeita. Confirme sua senha para continuar.</p>
-        <div id="deletar-campo"><input type="password" id="deletar-confirm" class="modal-input" placeholder="Digite sua senha para confirmar"></div>
-        <button class="btn-perfil-deletar modal-btn-entrar" style="width:100%;margin-bottom:12px" onclick="deletarConta()">
-            Confirmar exclusão
-        </button>
-        <button class="btn-perfil-sair modal-btn-entrar" style="width:100%" onclick="fecharDeletarBtn()">
-            Cancelar
-        </button>
-        <p id="deletar-msg" class="modal-login-erro"></p>
-    </div>
-</div>
-
-<!-- ===== MODAL RELATO ===== -->
-<div id="modal-relato" class="modal-overlay" onclick="fecharRelato(event)">
-    <div class="modal-box">
-        <button class="modal-fechar" onclick="fecharRelatoBtn()">✕</button>
-        <h3 class="modal-login-titulo">Compartilhe sua experiência</h3>
-        <p class="modal-login-sub">Sua história pode inspirar outros empreendedores!</p>
-        <select id="relato-perfil" class="modal-input modal-select">
-            <option value="">Selecione seu perfil...</option>
-            <option value="MEI">MEI</option>
-            <option value="Autônomo">Autônomo</option>
-            <option value="Motorista de App">Motorista de App</option>
-            <option value="Profissional de Beleza">Profissional de Beleza</option>
-            <option value="Produtor Manual">Produtor Manual</option>
-        </select>
-        <div class="modal-estrelas-wrap">
-            <span class="modal-estrelas-label">Sua avaliação <span style="color:#C0392B">*</span></span>
-            <div class="modal-estrelas" id="estrelas-container">
-                <span class="estrela" data-val="1" onclick="selecionarEstrela(1)">★</span>
-                <span class="estrela" data-val="2" onclick="selecionarEstrela(2)">★</span>
-                <span class="estrela" data-val="3" onclick="selecionarEstrela(3)">★</span>
-                <span class="estrela" data-val="4" onclick="selecionarEstrela(4)">★</span>
-                <span class="estrela" data-val="5" onclick="selecionarEstrela(5)">★</span>
-            </div>
-            <span id="estrelas-texto" class="modal-estrelas-texto">Selecione uma nota</span>
-        </div>
-        <textarea id="relato-texto" class="modal-input modal-textarea"
-            placeholder="Conte como o Empreenda Fácil te ajudou..."></textarea>
-        <button class="btn-primary modal-btn-entrar" onclick="enviarRelato()">Enviar Relato</button>
-        <p id="relato-msg" class="modal-login-erro"></p>
-    </div>
-</div>
-
-<!-- ===== HERO ===== -->
-<section class="hero">
-    <div class="hero-text">
-        <div class="hero-badge">🇧🇷 Feito para quem trabalha por conta própria</div>
-        <h1>Pare de perder clientes.<br>Comece a <em>crescer de verdade.</em></h1>
-        <p class="hero-desc">Ferramentas simples, gratuitas e práticas para MEIs, autônomos e pequenos empreendedores organizarem seu negócio e atraírem mais clientes.</p>
-        <div class="hero-actions">
-            <button class="btn-primary" onclick="scrollParaPerfis()">Escolher meu perfil</button>
-            <button class="btn-ghost" onclick="document.querySelector('.problemas').scrollIntoView({behavior:'smooth'})">Ver como funciona</button>
-        </div>
-        <div class="hero-stats">
-            <div>
-                <span class="hero-stat-num" data-target="5">0</span>
-                <span class="hero-stat-label">Perfis de negócio</span>
-            </div>
-            <div>
-                <span class="hero-stat-num" data-target="5">0</span>
-                <span class="hero-stat-label">Tutoriais em PDF</span>
-            </div>
-            <div>
-                <span class="hero-stat-num" data-target="3">0</span>
-                <span class="hero-stat-label">Planilhas gratuitas</span>
-            </div>
-        </div>
-    </div>
-    <div class="hero-visual">
-        <div class="hero-card-stack">
-            <div class="hcard hcard-1">
-                <div class="hcard-icon">📊</div>
-                <div class="hcard-title">Controle Financeiro</div>
-                <div class="hcard-desc">Planilha de fluxo de caixa e precificação</div>
-            </div>
-            <div class="hcard hcard-2">
-                <div class="hcard-icon">📱</div>
-                <div class="hcard-title">Presença Digital</div>
-                <div class="hcard-desc">Instagram, Google Maps e WhatsApp Business</div>
-            </div>
-            <div class="hcard hcard-3">
-                <div class="hcard-icon">🚀</div>
-                <div class="hcard-title">Comece hoje</div>
-                <div class="hcard-desc">Tutoriais passo a passo</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== PROBLEMAS ===== -->
-<section class="problemas">
-    <p class="section-label">Situações reais</p>
-    <h2 class="section-title">Você já passou por algum desses problemas?</h2>
-    <p class="section-sub">São situações muito comuns para quem trabalha por conta própria. E todas têm solução simples.</p>
-    <div class="problema-grid">
-        <div class="problema-card"><span class="prob-icon">📢</span><div class="prob-titulo">Divulgação e Visibilidade</div><div class="prob-frase">"Ninguém conhece meu trabalho."</div><div class="prob-desc">Depender só de indicação limita seu crescimento. Quem não aparece online simplesmente não é encontrado.</div></div>
-        <div class="problema-card"><span class="prob-icon">💰</span><div class="prob-titulo">Organização Financeira</div><div class="prob-frase">"Não sei se estou lucrando."</div><div class="prob-desc">Sem controle financeiro, você trabalha muito sem saber se realmente está tendo lucro.</div></div>
-        <div class="problema-card"><span class="prob-icon">📦</span><div class="prob-titulo">Gestão de Clientes</div><div class="prob-frase">"Esqueci de responder um cliente."</div><div class="prob-desc">Pedidos se perdem, mensagens acumulam e oportunidades são desperdiçadas.</div></div>
-        <div class="problema-card"><span class="prob-icon">⏳</span><div class="prob-titulo">Falta de Tempo</div><div class="prob-frase">"Faço tudo sozinho e não dou conta."</div><div class="prob-desc">Sem organização e ferramentas certas, o trabalho vira um ciclo cansativo e improdutivo.</div></div>
-        <div class="problema-card"><span class="prob-icon">📱</span><div class="prob-titulo">Presença Digital</div><div class="prob-frase">"Meu Instagram é bagunçado."</div><div class="prob-desc">Uma apresentação ruim afasta clientes e transmite falta de profissionalismo.</div></div>
-        <div class="problema-card"><span class="prob-icon">⭐</span><div class="prob-titulo">Credibilidade</div><div class="prob-frase">"As pessoas não confiam no meu serviço."</div><div class="prob-desc">Sem avaliações e provas sociais, novos clientes ficam inseguros em contratar.</div></div>
-        <div class="problema-card"><span class="prob-icon">📈</span><div class="prob-titulo">Novos Clientes</div><div class="prob-frase">"Só vendo para conhecidos."</div><div class="prob-desc">Sem estratégia, você não cresce e fica limitado ao seu círculo atual.</div></div>
-        <div class="problema-card"><span class="prob-icon">💻</span><div class="prob-titulo">Tecnologia Digital</div><div class="prob-frase">"Não entendo nada de internet."</div><div class="prob-desc">A tecnologia parece complicada, mas existem formas simples de usar a seu favor.</div></div>
-    </div>
-    <div class="problemas-cta">
-        <p>A boa notícia: <em>tudo isso tem solução simples e gratuita.</em></p>
-        <button class="btn-primary" onclick="scrollParaPerfis()">Ver o que fazer no meu caso →</button>
-    </div>
-</section>
-
-<!-- ===== EBOOK ===== -->
-<section class="ebook">
-    <div class="ebook-inner">
-        <div class="ebook-texto">
-            <p class="section-label">Guia completo e gratuito</p>
-            <h2 class="ebook-titulo">Empreenda Fácil:<br>O Guia Digital do<br>Pequeno Negócio</h2>
-            <p class="ebook-desc">Um guia completo e gratuito para microempreendedores e autônomos aprenderem a usar a tecnologia a seu favor — do zero, sem custo e sem complicação.</p>
-            <ul class="ebook-topicos">
-                <li><span class="ebook-check">✓</span> Como aparecer no Google e atrair clientes locais</li>
-                <li><span class="ebook-check">✓</span> Atendimento profissional com WhatsApp Business</li>
-                <li><span class="ebook-check">✓</span> Como organizar agenda, pedidos e financeiro</li>
-                <li><span class="ebook-check">✓</span> Dicas específicas para MEI, Autônomo, Beleza, Motorista e Produtor Manual</li>
-                <li><span class="ebook-check">✓</span> Mais de 30 páginas com linguagem simples e exemplos práticos</li>
-            </ul>
-            <div class="ebook-acoes">
-                <a href="pdf/EmpreendaFacil_Ebook.pdf" target="_blank"
-                   class="btn-primary"
-                   onclick="registrarClique('ebook')">
-                    ⬇ Baixar o Guia Gratuitamente
-                </a>
-                <span class="ebook-badge-gratis">100% gratuito · PDF · Sem cadastro</span>
-            </div>
-        </div>
-        <div class="ebook-mockup-wrap">
-            <div class="ebook-mockup">
-                <div class="ebook-mockup-topo"></div>
-                <div class="ebook-mockup-body">
-                    <div class="ebook-mockup-titulo">Empreenda<br>Fácil</div>
-                    <div class="ebook-mockup-linha"></div>
-                    <div class="ebook-mockup-sub">O Guia Digital do<br>Pequeno Negócio</div>
-                    <div class="ebook-mockup-icones">
-                        <span>📱</span><span>💰</span><span>📍</span><span>🚀</span>
+        // Materiais (cards de PDF)
+        if (sec.materiais && sec.materiais.length) {
+            html += `<div class="materiais-grid">`;
+            sec.materiais.forEach(m => {
+                html += `<a href="${m.link}" target="_blank" class="material-card">
+                    <div class="material-card-icon">${m.icon}</div>
+                    <div class="material-card-text">
+                        <strong>${m.nome}</strong>
+                        <span>${m.sub}</span>
                     </div>
-                    <div class="ebook-mockup-rodape">Araraquara · SP · Brasil</div>
+                </a>`;
+            });
+            html += `</div>`;
+        }
+
+        // Planilha
+        if (sec.planilha) {
+            html += `<a href="${sec.planilha.link}" target="_blank" class="planilha-card">
+                <div class="planilha-icon">📊</div>
+                <div class="planilha-text">
+                    <strong>${sec.planilha.nome}</strong>
+                    <span>${sec.planilha.sub}</span>
                 </div>
-                <div class="ebook-mockup-sombra"></div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== PERFIS ===== -->
-<section id="perfis">
-    <p class="section-label">Conteúdo personalizado</p>
-    <h2 class="section-title" style="color: var(--white)">Escolha seu perfil</h2>
-    <p class="section-sub" style="color: rgba(255,255,255,0.45); margin-bottom: 40px;">Selecione abaixo e receba um passo a passo feito para o seu tipo de negócio.</p>
-    <div class="perfil-grid">
-        <button class="perfil-btn" onclick="selecionarPerfil('mei', this)">
-            <span class="perfil-btn-icon">🏢</span>
-            <div class="perfil-btn-label">MEI</div>
-            <div class="perfil-btn-sub">Microempreendedor</div>
-            <div class="perfil-visto" id="visto-mei"></div>
-        </button>
-        <button class="perfil-btn" onclick="selecionarPerfil('autonomo', this)">
-            <span class="perfil-btn-icon">💼</span>
-            <div class="perfil-btn-label">Autônomo</div>
-            <div class="perfil-btn-sub">Profissional independente</div>
-            <div class="perfil-visto" id="visto-autonomo"></div>
-        </button>
-        <button class="perfil-btn" onclick="selecionarPerfil('motorista', this)">
-            <span class="perfil-btn-icon">🚗</span>
-            <div class="perfil-btn-label">Motorista de App</div>
-            <div class="perfil-btn-sub">Uber, 99 e outros</div>
-            <div class="perfil-visto" id="visto-motorista"></div>
-        </button>
-        <button class="perfil-btn" onclick="selecionarPerfil('beleza', this)">
-            <span class="perfil-btn-icon">💇</span>
-            <div class="perfil-btn-label">Beleza</div>
-            <div class="perfil-btn-sub">Cabelo, estética, unhas</div>
-            <div class="perfil-visto" id="visto-beleza"></div>
-        </button>
-        <button class="perfil-btn" onclick="selecionarPerfil('produtor', this)">
-            <span class="perfil-btn-icon">🎨</span>
-            <div class="perfil-btn-label">Produtor Manual</div>
-            <div class="perfil-btn-sub">Artesanato e confecção</div>
-            <div class="perfil-visto" id="visto-produtor"></div>
-        </button>
-    </div>
-    <!-- Contador de perfis visitados -->
-    <div id="perfis-contador" class="perfis-contador" style="display:none">
-        <span id="perfis-contador-texto">Você explorou 0 de 5 perfis</span>
-        <div class="perfis-contador-barra">
-            <div id="perfis-contador-fill" class="perfis-contador-fill"></div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== CONTEÚDO DINÂMICO ===== -->
-<section id="conteudo">
-    <div class="conteudo-empty">
-        <div class="conteudo-empty-icon">☝️</div>
-        <p>Selecione um perfil acima para ver os materiais</p>
-    </div>
-</section>
-
-<!-- ===== IMPACTO ===== -->
-<section class="impacto">
-    <div class="impacto-inner">
-        <p class="section-label" style="color: var(--amber)">Impacto real</p>
-        <h2 class="impacto-titulo">O Empreenda Fácil em números</h2>
-        <p class="impacto-sub">Cada download representa um empreendedor dando um passo em direção ao crescimento.</p>
-
-        <div id="impacto-grid" class="impacto-grid">
-            <!-- Preenchido dinamicamente -->
-            <div class="impacto-loading">Carregando dados...</div>
-        </div>
-
-        <!-- Relatos -->
-        <div class="relatos-section">
-            <h3 class="relatos-titulo">O que dizem os empreendedores</h3>
-            <div id="relatos-grid" class="relatos-grid">
-                <div class="impacto-loading">Carregando relatos...</div>
-            </div>
-            <div class="relatos-cta">
-                <button class="btn-relato" onclick="abrirFormRelato()">
-                    ✍️ Compartilhar minha experiência
-                </button>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== FOOTER ===== -->
-<footer>
-    <p class="footer-logo">Empreenda<strong>Fácil</strong></p>
-    <p class="footer-info">Projeto de extensão acadêmica — Análise e Desenvolvimento de Sistemas</p>
-    <p class="footer-sub">Feito para apoiar microempreendedores e trabalhadores autônomos de Araraquara, SP</p>
-</footer>
-
-<!-- ===== PAINEL ADMIN (oculto) ===== -->
-<div id="painel-admin" class="painel-admin" style="display:none">
-    <div class="painel-admin-box">
-        <div class="painel-admin-header">
-            <h3>⚙️ Painel Admin</h3>
-            <button onclick="fecharAdmin()">✕</button>
-        </div>
-        <div class="painel-admin-body">
-            <h4>📊 Downloads</h4>
-            <div id="admin-downloads"></div>
-            <h4 style="margin-top:24px">💬 Relatos Pendentes</h4>
-            <div id="admin-relatos"></div>
-        </div>
-    </div>
-</div>
-
-<script src="script.js"></script>
-<script>
-// ===== SUPABASE CONFIG =====
-const SUPABASE_URL = 'https://kprqwbopmnhtanipnvii.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwcnF3Ym9wbW5odGFuaXBudmlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MDYxOTcsImV4cCI6MjA5NDQ4MjE5N30.jBtXxSpC-ItRlMrmXjYyPm2g_nphyVd9Q3sBJgRfrWg';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// ===== ESTADO GLOBAL =====
-let usuarioAtual = null;
-let avatarArquivo = null;
-let notaSelecionada = 0;
-
-// ===== AUTH STATE =====
-sb.auth.onAuthStateChange(async (event, session) => {
-    usuarioAtual = session?.user || null;
-    await atualizarNavUsuario();
-    if (event === 'SIGNED_IN') {
-        // Garante que perfil existe no banco
-        if (usuarioAtual) {
-            await garantirPerfil();
+                <div class="planilha-arrow">→</div>
+            </a>`;
         }
-    }
-});
 
-async function garantirPerfil() {
-    const { data } = await sb.from('perfis').select('id').eq('id', usuarioAtual.id).single();
-    if (!data) {
-        const provider = usuarioAtual.app_metadata?.provider || 'email';
-        const nome = usuarioAtual.user_metadata?.full_name ||
-                     usuarioAtual.user_metadata?.nome ||
-                     usuarioAtual.email.split('@')[0];
-        await sb.from('perfis').insert({
-            id:         usuarioAtual.id,
-            nome,
-            email:      usuarioAtual.email,
-            avatar_url: usuarioAtual.user_metadata?.avatar_url || null,
-            tem_senha:  provider !== 'google',
-        });
-    }
-}
+        // Dicas
+        if (sec.dicas) {
+            html += `<div class="dica-box">
+                <div class="dica-box-title">${sec.dicas.titulo}</div>
+                <ul>${sec.dicas.items.map(d => `<li>${d}</li>`).join('')}</ul>
+            </div>`;
+        }
 
-// ===== NAVBAR USUÁRIO =====
-async function atualizarNavUsuario() {
-    const area = document.getElementById('nav-usuario');
-    if (!area) return;
-    if (usuarioAtual) {
-        const { data } = await sb.from('perfis')
-            .select('nome, avatar_url')
-            .eq('id', usuarioAtual.id).single();
-        const nome = data?.nome ||
-                     usuarioAtual.user_metadata?.full_name ||
-                     usuarioAtual.email.split('@')[0];
-        const inicial  = nome.charAt(0).toUpperCase();
-        const avatarSrc = data?.avatar_url || usuarioAtual.user_metadata?.avatar_url || null;
-        const avatarHTML = avatarSrc
-            ? `<img src="${avatarSrc}?t=${Date.now()}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
-            : inicial;
-        area.innerHTML = `
-            <button class="nav-usuario-btn" onclick="abrirPerfil()">
-                <span class="nav-usuario-avatar">${avatarHTML}</span>
-                <span class="nav-usuario-nome">Olá, ${nome.split(' ')[0]}</span>
-                <span class="nav-usuario-seta">▾</span>
-            </button>`;
-    } else {
-        area.innerHTML = `<button class="nav-login-btn" onclick="abrirLogin()">Entrar</button>`;
-    }
-}
-
-// ===== MODAIS GENÉRICOS =====
-function abrirModal(id)  { document.getElementById(id).classList.add('ativo'); }
-function fecharModal(id) { document.getElementById(id).classList.remove('ativo'); }
-function fecharSeClicouFora(e, id) { if (e.target === document.getElementById(id)) fecharModal(id); }
-
-// ===== MODAL SOBRE =====
-function abrirSobre()              { abrirModal('modal-sobre'); }
-function fecharSobre(e)            { fecharSeClicouFora(e, 'modal-sobre'); }
-function fecharSobreBtn()          { fecharModal('modal-sobre'); }
-
-// ===== MODAL LOGIN =====
-function abrirLogin()  { fecharTodosModais(); abrirModal('modal-login'); }
-function fecharLogin(e){ fecharSeClicouFora(e, 'modal-login'); }
-function fecharLoginBtn(){ fecharModal('modal-login'); }
-
-function fecharTodosModais() {
-    ['modal-login','modal-cadastro','modal-perfil','modal-deletar','modal-sobre','modal-relato']
-        .forEach(id => fecharModal(id));
-}
-
-async function loginGoogle() {
-    const { error } = await sb.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: 'https://empreendafacil.vercel.app' }
-    });
-    if (error) mostrarErro('login-erro', 'Erro ao entrar com Google.');
-}
-
-async function loginEmail() {
-    const email = document.getElementById('login-email').value.trim();
-    const senha = document.getElementById('login-senha').value;
-    if (!email || !senha) { mostrarErro('login-erro','Preencha e-mail e senha.'); return; }
-    const { error } = await sb.auth.signInWithPassword({ email, password: senha });
-    if (error) mostrarErro('login-erro','E-mail ou senha incorretos.');
-    else fecharLoginBtn();
-}
-
-// ===== MODAL CADASTRO =====
-function abrirCadastro()  { fecharModal('modal-login'); abrirModal('modal-cadastro'); }
-function fecharCadastro(e){ fecharSeClicouFora(e, 'modal-cadastro'); }
-function fecharCadastroBtn(){ fecharModal('modal-cadastro'); }
-function voltarLogin()    { fecharModal('modal-cadastro'); abrirModal('modal-login'); }
-
-async function criarConta() {
-    const nome  = document.getElementById('cad-nome').value.trim();
-    const email = document.getElementById('cad-email').value.trim();
-    const senha = document.getElementById('cad-senha').value;
-
-    if (!nome || !email || !senha) {
-        mostrarErro('cad-erro','Preencha todos os campos.'); return;
-    }
-    if (senha.length < 6) {
-        mostrarErro('cad-erro','A senha precisa ter pelo menos 6 caracteres.'); return;
-    }
-
-    const { data, error } = await sb.auth.signUp({
-        email, password: senha,
-        options: { data: { full_name: nome, nome } }
+        html += `</div>`;
     });
 
-    if (error) {
-        mostrarErro('cad-erro', error.message.includes('already')
-            ? 'Este e-mail já está cadastrado.'
-            : 'Erro ao criar conta. Tente novamente.');
-        return;
-    }
+    html += `</div>`;
 
-    if (data?.user) {
-        // Insere perfil manualmente (trigger pode não rodar imediatamente)
-        await sb.from('perfis').upsert({
-            id: data.user.id, nome, email, tem_senha: true
-        });
-        // Loga direto
-        const { error: loginErr } = await sb.auth.signInWithPassword({ email, password: senha });
-        if (loginErr) {
-            mostrarErro('cad-erro','Conta criada! Faça login com suas credenciais.', true);
-            setTimeout(() => voltarLogin(), 2000);
-        } else {
-            fecharCadastroBtn();
-        }
-    }
+    const area = document.getElementById("conteudo");
+    area.innerHTML = html;
+    area.scrollIntoView({ behavior: "smooth" });
 }
-
-// ===== MODAL PERFIL =====
-async function abrirPerfil() {
-    if (!usuarioAtual) return;
-
-    const { data } = await sb.from('perfis')
-        .select('*').eq('id', usuarioAtual.id).single();
-
-    const nome   = data?.nome || usuarioAtual.user_metadata?.full_name || usuarioAtual.email.split('@')[0];
-    const email  = usuarioAtual.email;
-    const avatar = data?.avatar_url || usuarioAtual.user_metadata?.avatar_url || null;
-    const temSenha = data?.tem_senha ?? (usuarioAtual.app_metadata?.provider !== 'google');
-
-    document.getElementById('perfil-nome').value  = nome;
-    document.getElementById('perfil-email').value = email;
-
-    // Avatar
-    const preview = document.getElementById('perfil-avatar-preview');
-    preview.innerHTML = avatar
-        ? `<img src="${avatar}?t=${Date.now()}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
-        : nome.charAt(0).toUpperCase();
-
-    // Seção senha — Google vê "criar senha", e-mail vê "alterar senha"
-    const senhaSec = document.getElementById('perfil-senha-section');
-    if (temSenha) {
-        senhaSec.innerHTML = `
-            <label class="modal-estrelas-label">Nova senha <span style="color:#8A8577;font-size:11px">(deixe vazio para não alterar)</span></label>
-            <input type="password" id="perfil-nova-senha" class="modal-input" placeholder="Nova senha (mín. 6 caracteres)">
-        `;
-    } else {
-        senhaSec.innerHTML = `
-            <label class="modal-estrelas-label" style="color:#E8A020">🔑 Você entrou pelo Google</label>
-            <p style="font-size:13px;color:#8A8577;margin-bottom:8px">Crie uma senha para poder excluir sua conta futuramente.</p>
-            <input type="password" id="perfil-nova-senha" class="modal-input" placeholder="Criar senha (mín. 6 caracteres)">
-        `;
-    }
-
-    avatarArquivo = null;
-    document.getElementById('perfil-msg').textContent = '';
-    abrirModal('modal-perfil');
-}
-
-function fecharPerfil(e)  { fecharSeClicouFora(e, 'modal-perfil'); }
-function fecharPerfilBtn(){ fecharModal('modal-perfil'); }
-
-function previewAvatar(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    if (file.size > 2 * 1024 * 1024) {
-        mostrarErro('perfil-msg','Imagem muito grande. Máximo 2MB.'); return;
-    }
-    avatarArquivo = file;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        document.getElementById('perfil-avatar-preview').innerHTML =
-            `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-    };
-    reader.readAsDataURL(file);
-}
-
-async function salvarPerfil() {
-    if (!usuarioAtual) return;
-    const nome  = document.getElementById('perfil-nome').value.trim();
-    const senha = document.getElementById('perfil-nova-senha')?.value || '';
-
-    if (!nome) { mostrarErro('perfil-msg','O nome não pode ficar vazio.'); return; }
-    if (senha && senha.length < 6) { mostrarErro('perfil-msg','A senha precisa ter pelo menos 6 caracteres.'); return; }
-
-    let avatarUrl = null;
-
-    // Upload avatar se tiver arquivo novo
-    if (avatarArquivo) {
-        const ext  = avatarArquivo.name.split('.').pop().toLowerCase();
-        const path = `${usuarioAtual.id}/avatar.${ext}`;
-        const { error: upErr } = await sb.storage
-            .from('avatares')
-            .upload(path, avatarArquivo, { upsert: true, contentType: avatarArquivo.type });
-        if (upErr) {
-            mostrarErro('perfil-msg','Erro ao enviar foto. Tente novamente.'); return;
-        }
-        const { data: urlData } = sb.storage.from('avatares').getPublicUrl(path);
-        avatarUrl = urlData.publicUrl;
-    }
-
-    // Atualiza perfil no banco
-    const update = { nome };
-    if (avatarUrl) update.avatar_url = avatarUrl;
-
-    const { error: dbErr } = await sb.from('perfis').update(update).eq('id', usuarioAtual.id);
-    if (dbErr) { mostrarErro('perfil-msg','Erro ao salvar perfil.'); return; }
-
-    // Atualiza metadata auth
-    const metaUpdate = { data: { full_name: nome, nome } };
-    if (avatarUrl) metaUpdate.data.avatar_url = avatarUrl;
-    await sb.auth.updateUser(metaUpdate);
-
-    // Atualiza senha se preenchida
-    if (senha) {
-        const { error: senhaErr } = await sb.auth.updateUser({ password: senha });
-        if (senhaErr) { mostrarErro('perfil-msg','Perfil salvo, mas erro na senha. Tente novamente.'); return; }
-        await sb.from('perfis').update({ tem_senha: true }).eq('id', usuarioAtual.id);
-    }
-
-    avatarArquivo = null;
-    mostrarErro('perfil-msg','✅ Perfil salvo com sucesso!', true);
-    await atualizarNavUsuario();
-}
-
-async function logout() {
-    await sb.auth.signOut();
-    fecharTodosModais();
-}
-
-// ===== MODAL DELETAR CONTA =====
-async function abrirDeletarConta() {
-    const { data } = await sb.from('perfis').select('tem_senha').eq('id', usuarioAtual.id).single();
-    const temSenha = data?.tem_senha ?? true;
-
-    const campo = document.getElementById('deletar-campo');
-    if (temSenha) {
-        campo.innerHTML = `<input type="password" id="deletar-confirm" class="modal-input" placeholder="Digite sua senha para confirmar">`;
-    } else {
-        campo.innerHTML = `<input type="email" id="deletar-confirm" class="modal-input" placeholder="Digite seu e-mail para confirmar">`;
-    }
-
-    document.getElementById('deletar-msg').textContent = '';
-    fecharModal('modal-perfil');
-    abrirModal('modal-deletar');
-}
-
-function fecharDeletar(e)  { fecharSeClicouFora(e, 'modal-deletar'); }
-function fecharDeletarBtn(){
-    fecharModal('modal-deletar');
-    abrirModal('modal-perfil');
-}
-
-async function deletarConta() {
-    const confirmVal = document.getElementById('deletar-confirm')?.value;
-    if (!confirmVal) { mostrarErro('deletar-msg','Preencha o campo de confirmação.'); return; }
-
-    const { data } = await sb.from('perfis').select('tem_senha').eq('id', usuarioAtual.id).single();
-    const temSenha = data?.tem_senha ?? true;
-
-    if (temSenha) {
-        // Confirma com senha — tenta reautenticar
-        const { error } = await sb.auth.signInWithPassword({
-            email: usuarioAtual.email, password: confirmVal
-        });
-        if (error) { mostrarErro('deletar-msg','Senha incorreta.'); return; }
-    } else {
-        // Confirma com e-mail
-        if (confirmVal.toLowerCase() !== usuarioAtual.email.toLowerCase()) {
-            mostrarErro('deletar-msg','E-mail incorreto.'); return;
-        }
-    }
-
-    // Deleta perfil (cascade deleta relatos vinculados)
-    await sb.from('perfis').delete().eq('id', usuarioAtual.id);
-    await sb.auth.signOut();
-    fecharTodosModais();
-    alert('Conta excluída com sucesso. Até mais!');
-}
-
-// ===== ESTRELAS =====
-function selecionarEstrela(val) {
-    notaSelecionada = val;
-    const textos = ['','Ruim','Regular','Bom','Muito bom','Excelente!'];
-    document.getElementById('estrelas-texto').textContent = textos[val];
-    document.querySelectorAll('.estrela').forEach(e => {
-        e.classList.toggle('ativa', parseInt(e.dataset.val) <= val);
-    });
-}
-
-// ===== MODAL RELATO =====
-function abrirFormRelato() {
-    if (!usuarioAtual) { abrirLogin(); return; }
-    notaSelecionada = 0;
-    document.querySelectorAll('.estrela').forEach(e => e.classList.remove('ativa'));
-    document.getElementById('estrelas-texto').textContent = 'Selecione uma nota';
-    document.getElementById('relato-perfil').value  = '';
-    document.getElementById('relato-texto').value   = '';
-    document.getElementById('relato-msg').textContent = '';
-    abrirModal('modal-relato');
-}
-function fecharRelato(e)  { fecharSeClicouFora(e, 'modal-relato'); }
-function fecharRelatoBtn(){ fecharModal('modal-relato'); }
-
-async function enviarRelato() {
-    if (!usuarioAtual) { abrirLogin(); return; }
-    const perfil = document.getElementById('relato-perfil').value;
-    const texto  = document.getElementById('relato-texto').value.trim();
-
-    if (!perfil)        { mostrarErro('relato-msg','Selecione seu perfil.'); return; }
-    if (!notaSelecionada){ mostrarErro('relato-msg','Selecione uma nota de 1 a 5 estrelas.'); return; }
-    if (!texto)         { mostrarErro('relato-msg','Escreva seu relato.'); return; }
-
-    const { data: perfData } = await sb.from('perfis').select('nome').eq('id', usuarioAtual.id).single();
-    const nome = perfData?.nome || usuarioAtual.email.split('@')[0];
-
-    const { error } = await sb.from('relatos').insert([{
-        usuario_id: usuarioAtual.id,
-        nome, perfil, texto, nota: notaSelecionada, aprovado: false
-    }]);
-
-    if (error) mostrarErro('relato-msg','Erro ao enviar. Tente novamente.');
-    else {
-        mostrarErro('relato-msg','✅ Relato enviado! Será publicado após aprovação.', true);
-        setTimeout(() => fecharRelatoBtn(), 2500);
-    }
-}
-
-// ===== REGISTRAR CLIQUE =====
-async function registrarClique(item) {
-    try { await sb.rpc('registrar_clique', { item_nome: item }); } catch(e) {}
-}
-
-// ===== CARREGAR IMPACTO (tempo real corrigido) =====
-async function carregarImpacto() {
-  try {
-    const { data, error } = await sb.from('downloads').select('*').order('id');
-    if (error) throw error;
-    renderImpacto(data);
-  } catch (err) {
-    console.error("Erro ao carregar contadores:", err.message);
-  }
-}
-
-function renderImpacto(data) {
-  if (!data || data.length === 0) {
-    const grid = document.getElementById('impacto-grid');
-    if (grid) grid.innerHTML = '<p>Nenhum dado disponível</p>';
-    return;
-  }
-  const grid = document.getElementById('impacto-grid');
-  if (!grid) return; // Proteção caso o elemento HTML ainda não exista na árvore
-
-  const total = data.reduce((acc, d) => acc + (d.cliques_exibidos || 0), 0);
-  grid.innerHTML = `
-    <div class="impacto-card impacto-total">
-      <span class="impacto-num">${total}</span>
-      <span class="impacto-label">Downloads realizados</span>
-    </div>
-    ${data.map(d => `
-      <div class="impacto-card">
-        <span class="impacto-num">${d.cliques_exibidos || 0}</span>
-        <span class="impacto-label">${d.label}</span>
-      </div>
-    `).join('')}
-  `;
-}
-
-// Ativação limpa do canal em tempo real externa (roda para todos os visitantes)
-sb.channel('downloads-realtime')
-  .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'downloads' }, () => {
-    carregarImpacto();
-  })
-  .subscribe();
-
-// Garante que a busca inicial aconteça de forma segura após o HTML ser desenhado
-document.addEventListener('DOMContentLoaded', () => {
-  carregarImpacto();
-});
-
-
-// ===== CARREGAR RELATOS =====
-async function carregarRelatos() {
-    const { data } = await sb.from('relatos')
-        .select('*').eq('aprovado', true)
-        .order('criado_em', { ascending: false }).limit(6);
-    const grid = document.getElementById('relatos-grid');
-    if (!data || data.length === 0) {
-        grid.innerHTML = '<p class="relatos-vazio">Seja o primeiro a compartilhar sua experiência!</p>';
-        return;
-    }
-    grid.innerHTML = data.map(r => {
-        const estrelas = r.nota
-            ? '★'.repeat(r.nota) + '☆'.repeat(5 - r.nota)
-            : '';
-        return `
-        <div class="relato-card">
-            <div class="relato-perfil-badge">${r.perfil}</div>
-            ${estrelas ? `<div class="relato-estrelas">${estrelas}</div>` : ''}
-            <p class="relato-texto">"${r.texto}"</p>
-            <span class="relato-nome">— ${r.nome}</span>
-        </div>`;
-    }).join('');
-}
-
-// ===== PERFIS VISITADOS =====
-const perfisVisitados = new Set();
-
-function marcarPerfilVisitado(key) {
-    perfisVisitados.add(key);
-    const visto = document.getElementById(`visto-${key}`);
-    if (visto) visto.innerHTML = '✓';
-
-    const total    = perfisVisitados.size;
-    const contador = document.getElementById('perfis-contador');
-    const texto    = document.getElementById('perfis-contador-texto');
-    const fill     = document.getElementById('perfis-contador-fill');
-
-    contador.style.display = 'block';
-    texto.textContent = `Você explorou ${total} de 5 perfis`;
-    fill.style.width  = `${(total / 5) * 100}%`;
-}
-
-// ===== ANIMAÇÃO HERO =====
-function animarContadores() {
-    document.querySelectorAll('.hero-stat-num').forEach(el => {
-        const target = parseInt(el.dataset.target);
-        let current  = 0;
-        const timer  = setInterval(() => {
-            current += 1;
-            if (current >= target) { current = target; clearInterval(timer); }
-            el.textContent = current;
-        }, 120);
-    });
-}
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { animarContadores(); observer.disconnect(); } });
-}, { threshold: 0.5 });
-const heroStats = document.querySelector('.hero-stats');
-if (heroStats) observer.observe(heroStats);
-
-// ===== PAINEL ADMIN =====
-const SENHA_ADMIN = 'empreendafacil2025';
-
-document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.shiftKey && e.key === 'A') abrirAdmin();
-});
-
-async function abrirAdmin() {
-    const senha = prompt('Senha de administrador:');
-    if (senha !== SENHA_ADMIN) return;
-    document.getElementById('painel-admin').style.display = 'flex';
-    await carregarAdmin();
-}
-
-function fecharAdmin() {
-    document.getElementById('painel-admin').style.display = 'none';
-}
-
-async function carregarAdmin() {
-    const { data: dls } = await sb.from('downloads').select('*').order('id');
-    document.getElementById('admin-downloads').innerHTML = dls
-        ? dls.map(d => `
-            <div class="admin-row">
-                <span>${d.label}</span>
-                <span>Real: <strong>${d.cliques_reais}</strong></span>
-                <input type="number" value="${d.cliques_exibidos}"
-                       onchange="atualizarExibido(${d.id}, this.value)"
-                       class="admin-input" title="Número exibido publicamente">
-                <small>exibido</small>
-            </div>`).join('')
-        : 'Erro.';
-
-    const { data: rels } = await sb.from('relatos')
-        .select('*').eq('aprovado', false).order('criado_em', { ascending: false });
-    document.getElementById('admin-relatos').innerHTML = rels?.length
-        ? rels.map(r => `
-            <div class="admin-row admin-relato-row">
-                <div>
-                    <strong>${r.nome}</strong> · ${r.perfil}
-                    ${r.nota ? ' · ' + '★'.repeat(r.nota) : ''}<br>
-                    <span>${r.texto}</span>
-                </div>
-                <div class="admin-relato-acoes">
-                    <button onclick="aprovarRelato(${r.id})" class="admin-btn-aprovar">✓ Aprovar</button>
-                    <button onclick="apagarRelato(${r.id})"  class="admin-btn-apagar">✕ Apagar</button>
-                </div>
-            </div>`).join('')
-        : '<p style="color:var(--gray-500)">Nenhum relato pendente.</p>';
-}
-
-async function atualizarExibido(id, valor) {
-    await sb.from('downloads').update({ cliques_exibidos: parseInt(valor) }).eq('id', id);
-}
-
-async function aprovarRelato(id) {
-    await sb.from('relatos').update({ aprovado: true }).eq('id', id);
-    await carregarAdmin();
-    await carregarRelatos();
-}
-
-async function apagarRelato(id) {
-    if (!confirm('Apagar este relato?')) return;
-    await sb.from('relatos').delete().eq('id', id);
-    await carregarAdmin();
-}
-
-// ===== INIT =====
-window.addEventListener('DOMContentLoaded', () => {
-    carregarImpacto();
-    carregarRelatos();
-
-    if (typeof selecionarPerfil === 'function') {
-        const _orig = selecionarPerfil;
-        window.selecionarPerfil = function(key, btnEl) {
-            _orig(key, btnEl);
-            marcarPerfilVisitado(key);
-        };
-    }
-});
-
-// Utilidade
-function mostrarErro(id, msg, ok=false) {
-    const el = document.getElementById(id);
-    if (el) { el.textContent = msg; el.style.color = ok ? '#1A7A4A' : '#C0392B'; }
-}
-</script>
-
-</body>
-</html>
